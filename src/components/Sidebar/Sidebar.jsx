@@ -10,11 +10,14 @@ import {
     FiCheck,
     FiChevronLeft,
     FiChevronRight,
-    FiHome
+    FiHome,
+    FiBriefcase,
+    FiZap
 } from 'react-icons/fi';
 import { MdOutlineChatBubbleOutline } from "react-icons/md";
 
 const Sidebar = ({ activeView, setActiveView, collapsed }) => {
+
     const [expanded, setExpanded] = useState({});
     const location = useLocation();
 
@@ -26,51 +29,86 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
         menuItems.forEach(item => {
             if (item.children) {
                 // Check if current location matches any child path
-                const isChildActive = item.children.some(child =>
-                    location.pathname === child.path ||
-                    (child.path === '/' && location.pathname === '/')
-                );
+                const isChildActive = checkChildActive(item.children, location.pathname);
                 if (isChildActive) {
                     newExpanded[item.label] = true;
                 }
+
+                // Also check for nested grandchildren
+                item.children.forEach(child => {
+                    if (child.children) {
+                        const isGrandchildActive = checkChildActive(child.children, location.pathname);
+                        if (isGrandchildActive) {
+                            newExpanded[item.label] = true;
+                            newExpanded[child.label] = true;
+                        }
+                    }
+                });
             }
         });
 
         setExpanded(newExpanded);
     }, [location.pathname]);
 
+    // Helper function to check if any child is active
+    const checkChildActive = (children, pathname) => {
+        return children.some(child => {
+            if (child.path) {
+                return pathname === child.path || (child.path === '/' && pathname === '/');
+            }
+            if (child.children) {
+                return checkChildActive(child.children, pathname);
+            }
+            return false;
+        });
+    };
+
     const menuItems = [
         {
-            icon: <FiHome />,
-            label: 'Dashboard',
+            icon: <FiTarget />,
+            label: 'Onboarding',
+            children: [
+                { label: 'Client Management', path: '/client-mang' },
+                { label: 'License Management', path: '/license-management' },
+                { label: 'Utilization Report', path: '/utilization-report' },
+                { label: 'Billing Summary', path: '/billing-management' },
+            ],
+            noBorderTop: true
+        },
+        {
+            icon: <FiGrid />,
+            label: 'Platform',
             children: [
                 { label: 'Overview', path: '/' },
                 { label: 'Providers', path: '/providers' },
+                { label: 'Model Catalog', path: '/models' },
+                { label: 'Data Sources', path: '/data-sources' },
+                { label: 'Model Training', path: '/model-training' },
+                {
+                    label: 'Playground',
+                    children: [
+                        { label: 'Standard', path: '/chat' },
+                        { label: 'Pre-Trained', path: '/realtime' },
+                        { label: 'API', path: '/api-playground' },
+                    ]
+                },
             ],
-            noBorderTop: true // Add this flag
         },
         {
-            path: '/models',
-            icon: <FiTarget />,
-            label: 'Model Catalog'
-        },
-        {
-            path: '/data-sources',
-            icon: <FiDatabase />,
-            label: 'Data Sources'
-        },
-        {
-            path: '/model-training',
-            icon: <FiSliders />,
-            label: 'Model Training'
-        },
-        {
-            icon: <MdOutlineChatBubbleOutline />,
-            label: 'Playground',
+            icon: <FiBriefcase />,
+            label: 'Business Application',
             children: [
-                { label: 'Standard', path: '/chat' },
-                { label: 'Pre-Trained', path: '/realtime' },
-                { label: 'API', path: '/api-playground' },
+                { label: 'AI Voice Bot', path: '/ai-voice-bot' },
+                { label: 'Intelligent Document', path: '/intelligent-doc' },
+                { label: 'AI Motor Claims Automation', path: '/motor-claims' },
+            ],
+        },
+        {
+            icon: <FiZap />,
+            label: 'Accelerators',
+            children: [
+                { label: 'Predefined Workflow', path: '/predefine-wf' },
+                { label: 'Workflow Builder', path: '/workf-builder' },
             ],
         },
     ];
@@ -82,9 +120,78 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
         }));
     };
 
-    // Check if a section should be expanded based on current route
-    const isSectionExpanded = (label) => {
-        return expanded[label] || false;
+    // Recursive component to render nested menu items
+    const renderMenuItem = (item, level = 0) => {
+        const isExpanded = expanded[item.label] || false;
+
+        if (item.children) {
+            return (
+                <div className="nav-section">
+                    <div
+                        className={`nav-item-header ${level === 0 && item.noBorderTop ? 'no-border-top' : ''} ${level > 0 ? 'nested' : ''}`}
+                        onClick={() => toggleSection(item.label)}
+                        style={{
+                            paddingLeft: level > 0 ? '65px' : '20px'
+                        }}
+                    >
+                        <span className="icon">{item.icon}</span>
+                        {!collapsed && level === 0 && <span className="label">{item.label}</span>}
+                        {!collapsed && level > 0 && <span className="label nested-label">{item.label}</span>}
+                        {!collapsed && (
+                            <span className={`arrow ${isExpanded ? 'expanded' : ''}`}>
+                                ▼
+                            </span>
+                        )}
+                    </div>
+
+                    <div className={`nav-subitems ${!collapsed && isExpanded ? 'visible' : 'hidden'}`}>
+                        {item.children.map((child) => (
+                            <React.Fragment key={child.label || child.path}>
+                                {child.children ? (
+                                    // Render nested child with children
+                                    renderMenuItem(child, level + 1)
+                                ) : (
+                                    // Render regular child link
+                                    <NavLink
+                                        to={child.path}
+                                        end={child.path === '/'}
+                                        className={({ isActive }) =>
+                                            `nav-subitem ${isActive ? 'active' : ''}`
+                                        }
+                                        style={{ paddingLeft: `${50 + (level * 20)}px` }}
+                                        onClick={() => {
+                                            if (collapsed) {
+                                                setExpanded(prev => ({
+                                                    ...prev,
+                                                    [item.label]: true
+                                                }));
+                                            }
+                                        }}
+                                    >
+                                        <div className="subitem-content">
+                                            {child.label}
+                                        </div>
+                                    </NavLink>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <NavLink
+                to={item.path}
+                className={({ isActive }) =>
+                    `nav-item ${isActive ? 'active' : ''}`
+                }
+                style={{ paddingLeft: `${20 + (level * 20)}px` }}
+            >
+                <span className="icon">{item.icon}</span>
+                {!collapsed && <span className="label">{item.label}</span>}
+            </NavLink>
+        );
     };
 
     return (
@@ -93,61 +200,7 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                 <ul className="menu-list">
                     {menuItems.map((item) => (
                         <li key={item.label}>
-                            {item.children ? (
-                                <div className="nav-section">
-                                    <div
-                                        className={`nav-item-header ${item.noBorderTop ? 'no-border-top' : ''}`}
-                                        onClick={() => toggleSection(item.label)}
-                                    >
-                                        <span className="icon">{item.icon}</span>
-                                        {!collapsed && <span className="label">{item.label}</span>}
-                                        {!collapsed && (
-                                            <span
-                                                className={`arrow ${isSectionExpanded(item.label) ? 'expanded' : ''}`}
-                                            >
-                                                ▼
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    {/* Always render children but control visibility */}
-                                    <div className={`nav-subitems ${!collapsed && isSectionExpanded(item.label) ? 'visible' : 'hidden'}`}>
-                                        {item.children.map((child) => (
-                                            <NavLink
-                                                key={child.path}
-                                                to={child.path}
-                                                end={child.path === '/'}
-                                                className={({ isActive }) =>
-                                                    `nav-subitem ${isActive ? 'active' : ''}`
-                                                }
-                                                onClick={() => {
-                                                    // Auto-expand parent when child is clicked in collapsed mode
-                                                    if (collapsed) {
-                                                        setExpanded(prev => ({
-                                                            ...prev,
-                                                            [item.label]: true
-                                                        }));
-                                                    }
-                                                }}
-                                            >
-                                                <div className="subitem-content">
-                                                    {child.label}
-                                                </div>
-                                            </NavLink>
-                                        ))}
-                                    </div>
-                                </div>
-                            ) : (
-                                <NavLink
-                                    to={item.path}
-                                    className={({ isActive }) =>
-                                        `nav-item ${isActive ? 'active' : ''}`
-                                    }
-                                >
-                                    <span className="icon">{item.icon}</span>
-                                    {!collapsed && <span className="label">{item.label}</span>}
-                                </NavLink>
-                            )}
+                            {renderMenuItem(item)}
                         </li>
                     ))}
                 </ul>
@@ -162,3 +215,4 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
 };
 
 export default Sidebar;
+
