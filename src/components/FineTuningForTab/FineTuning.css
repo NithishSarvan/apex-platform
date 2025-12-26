@@ -1,0 +1,53 @@
+/* ----------------------------------------------- */
+
+/* Additional styles for Fine-Tuning Methods */
+
+/* Range input styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: #e5e7eb;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #02b499;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Training summary cards */
+.training-summary-card {
+    transition: all 0.2s ease;
+}
+
+.training-summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Method selection animation */
+.method-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.method-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Disabled button state */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Configuration panel */
+.config-panel {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
