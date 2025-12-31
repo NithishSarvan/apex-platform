@@ -67,10 +67,11 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
         {
             icon: <FiTarget />,
             label: 'Onboarding',
+            path: '/onboarding',
             children: [
                 { label: 'Client Management', path: '/client-mang' },
                 { label: 'License Management', path: '/license-management' },
-                { label: 'Utilization Report', path: '/utilization-report' },
+                { label: 'Usage Report', path: '/utilization-report' },
                 { label: 'Billing Summary', path: '/billing-management' },
             ],
             noBorderTop: true
@@ -107,8 +108,8 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
             icon: <FiZap />,
             label: 'Accelerators',
             children: [
-                { label: 'Predefined Workflow', path: '/predefine-wf' },
-                { label: 'Workflow Builder', path: '/workf-builder' },
+                { label: 'Predefined Workflow', path: '/predefined-workflow' },
+                { label: 'Workflow Builder', path: '/workflows' },
             ],
         },
     ];

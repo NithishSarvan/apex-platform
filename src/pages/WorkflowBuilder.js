@@ -8,9 +8,9 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
     const [workflow, setWorkflow] = useState({
         nodes: [
             { id: 1, type: 'trigger', title: 'Email Trigger', icon: <FiMail />, x: 50, y: 50 },
-            { id: 2, type: 'action', title: 'AI Analysis', icon: <FiCpu />, x: 250, y: 50 },
-            { id: 3, type: 'action', title: 'Save to Database', icon: <FiDatabase />, x: 450, y: 50 },
-            { id: 4, type: 'action', title: 'Send Response', icon: <FiMail />, x: 650, y: 50 },
+            { id: 2, type: 'action', title: 'AI Analysis', icon: <FiCpu />, x: 310, y: 50 },
+            { id: 3, type: 'action', title: 'Save to Database', icon: <FiDatabase />, x: 50, y: 200 },
+            { id: 4, type: 'action', title: 'Send Response', icon: <FiMail />, x: 310, y: 260 },
         ],
         connections: [
             { from: 1, to: 2 },
@@ -300,9 +300,17 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
 
     return (
         <div className='main-content'>
-            <div className="mb-6">
-                <h3 className="font-semibold mb-4">Workflow Builder</h3>
-                <p className="text-sm text-gray-600 mb-6">Drag and drop nodes to create your automation workflow. Connect them to define the execution flow.</p>
+
+
+            <div className="flex gap-2 items-center ">
+
+                <div>
+                    <h1 className="text-2xl font-bold text-black-500">Workflow Builder</h1>
+
+                </div>
+            </div>
+            <div className='heighligts my-4' >
+                <p className="text-sm text-gray-600 ">Drag and drop nodes to create your automation workflow. Connect them to define the execution flow.</p>
             </div>
 
             <div className="grid grid-cols-4 gap-6">

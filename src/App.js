@@ -19,6 +19,12 @@ import AIOperatingSystemDashboard from './pages/newflow/AIOperatingSystemDashboa
 import AIOSEnterpriseDashboard from './pages/newflow/AIOperatingSystemDashboard';
 import ModelTrainingList from './components/ModelTrainingTabs/ModelTrainingList';
 import { ApiPlaygroundPage } from './pages/playground/ApiPlayground';
+import PredefinedWorkflows from './components/Accelerators/PredefinedWorkflows';
+import Onboarding from './components/Onboardings/Onboarding';
+import ClientManagement from './components/Onboardings/ClientManagement';
+import LicenseManagement from './components/Onboardings/LicenseManagement';
+import UtilizationReport from './components/Onboardings/UtilizationReport';
+import BillingSummary from './components/Onboardings/BillingSummary';
 
 
 
@@ -73,6 +79,13 @@ function App() {
             <Route path="/aios" element={<AIOperatingSystemDashboard />} />
             <Route path="/model-training" element={<ModelTrainingList />} />
             <Route path="/api-playground" element={<ApiPlaygroundPage />} />
+            <Route path="/predefined-workflow" element={<PredefinedWorkflows />} />
+
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/client-mang" element={<ClientManagement />} />
+            <Route path="/license-management" element={<LicenseManagement />} />
+            <Route path="/utilization-report" element={<UtilizationReport />} />
+            <Route path="/billing-management" element={<BillingSummary />} />
             {/* <Route path="/aios" element={<AIOSEnterpriseDashboard />} /> */}
             {/* <Route path="/clients" element={<Clients />} /> */}
           </Routes>
