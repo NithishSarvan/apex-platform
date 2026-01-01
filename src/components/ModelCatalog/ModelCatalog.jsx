@@ -18,20 +18,52 @@ import {
     Menu
 } from "@mui/material";
 
+import gpt from "../../assets/gpt-JRKBi7sz.svg";
+import meta from "../../assets/meta-svg.svg";
+import mbzuai from "../../assets/mbzuai.svg";
+import inception from "../../assets/inception.svg";
+import mistral from "../../assets/mistral.svg";
+import stablediffusion from "../../assets/stablediffusion.png";
+import anthropicCalude from "../../assets/anthropicCalude.svg";
+import deepseek from "../../assets/deepseek.svg";
+import qwen from "../../assets/qwen.svg";
+import cohere from "../../assets/cohere.svg";
+import xai from "../../assets/xai.svg";
 
 const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
     const navigate = useNavigate();
 
+
+    const [providers, setProviders] = useState([
+        { id: 1, name: "OpenAI", description: "OpenAI", modelCount: 26 },
+        { id: 2, name: "Meta", description: "Meta", modelCount: 3 },
+        { id: 3, name: "MBZUAI", description: "MBZUAI", modelCount: 2 },
+        { id: 4, name: "Inception", description: "Inception", modelCount: 1 },
+        { id: 5, name: "Mistral AI", description: "mistral", modelCount: 3 },
+        { id: 6, name: "Stability AI", description: "Stability AI", modelCount: 1 },
+        { id: 7, name: "Anthropic", description: "Anthropic", modelCount: 1 },
+        { id: 8, name: "DeepSeek", description: "DeepSeek", modelCount: 1 },
+        { id: 9, name: "Qwen", description: "Qwen", modelCount: 3 },
+        { id: 10, name: "Cohere", description: "Cohere", modelCount: 4 },
+        { id: 11, name: "xAI", description: "xAI", modelCount: 1 },
+    ]);
+
+    const [modelType, setModelType] = useState([
+        { id: 'API', name: "API-Hosted" },
+        { id: 'SELF', name: "Sefl-Hosted" },
+
+    ]);
+
     const models = [
-        { id: 'gpt-4', name: 'GPT-4o', desc: `GPT-4o is OpenAI's latest model, offering faster, more efficient, and skillful multimodal reasoning for text inputs while maintaining improved accuracy, coherence, and responsiveness.` },
-        { id: 'gpt-41', name: 'GPT-4o mini', desc: `OpenAI's most advanced model in the small models category supports text inputs and generates text outputs, making it ideal for smaller tasks.` },
+        { id: 'gpt-4', logo: gpt, name: 'GPT-4o', desc: `GPT-4o is OpenAI's latest model, offering faster, more efficient, and skillful multimodal reasoning for text inputs while maintaining improved accuracy, coherence, and responsiveness.` },
+        { id: 'gpt-41', logo: gpt, name: 'GPT-4o mini', desc: `OpenAI's most advanced model in the small models category supports text inputs and generates text outputs, making it ideal for smaller tasks.` },
         {
-            id: 'gpt-42', name: 'K2 Think Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Cerebras clusters.`
+            id: 'gpt-42', logo: deepseek, name: 'K2 Think Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Cerebras clusters.`
         },
-        { id: 'gpt-43', name: 'gpt-oss-120b Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Core42 cloud located in the UAE region.` },
-        { id: 'gpt-44', name: 'Whisper', desc: `Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitask model that can perform multilingual speech recognition as well as speech translation and language identification.` },
-        { id: 'gpt-45', name: 'Llama 3 70B', desc: `Llama 3 is an auto-regressive language model, part of the Llama 3 family, and the next generation of Meta's open-source LLMs. It is one of the most capable openly available LLMs with improved reasoning capabilities compared to its previous models.` }
+        { id: 'gpt-43', logo: gpt, name: 'gpt-oss-120b Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Core42 cloud located in the UAE region.` },
+        { id: 'gpt-44', logo: gpt, name: 'Whisper', desc: `Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitask model that can perform multilingual speech recognition as well as speech translation and language identification.` },
+        { id: 'gpt-45', logo: mistral, name: 'Llama 3 70B', desc: `Llama 3 is an auto-regressive language model, part of the Llama 3 family, and the next generation of Meta's open-source LLMs. It is one of the most capable openly available LLMs with improved reasoning capabilities compared to its previous models.` }
     ];
 
     const [showAddModal, setShowAddModal] = useState(false);
@@ -39,10 +71,13 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
     const [newModel, setNewModel] = useState({
         name: '',
         provider: '',
-        type: 'API',
+        type: '',
         endpoint: '',
         apiKey: '',
         cost: "",
+        url: "",
+        apikey: "",
+        logo: null
     });
 
     const handleAddModel = () => {
@@ -53,7 +88,8 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
             type: newModel.type,
             maxTokens: newModel.maxTokens,
             cost: newModel.cost,
-            status: 'inactive'
+            status: 'inactive',
+
         };
         // setModels([...models, newModelObj]);
         // setSelectedModel(newModelObj.id);
@@ -110,6 +146,23 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
     const handleMenuClose = () => {
         setAnchorEl(null);
+    };
+
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setNewModel(prev => ({
+                    ...prev,
+                    logo: reader.result
+                }));
+
+
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
 
@@ -193,42 +246,11 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                                     <Grid item size={6}><label><input type="checkbox" /> Text</label></Grid>
                                     <Grid item size={6}><label><input type="checkbox" /> Image</label></Grid>
                                     <Grid item size={6}><label><input type="checkbox" /> Audio</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Embedding</label></Grid>
                                 </Grid>
                             </div>
 
-                            {/* TASK */}
-                            <div className="filter-section">
-                                <h4>Task (9)</h4>
-                                <Grid container spacing={2}>
-                                    <Grid item size={6}><label><input type="checkbox" /> Text Generation</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Speech to Text</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Audio Generation</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Image Generation</label></Grid>
-                                </Grid>
-                                <div className="see-all">▼ See All (5)</div>
-                            </div>
 
-                            {/* REGION */}
-                            <div className="filter-section">
-                                <h4>Region (4)</h4>
-                                <Grid container spacing={2}>
-                                    <Grid item size={6}><label><input type="checkbox" /> US</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Europe</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Asia</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Global</label></Grid>
-                                </Grid>
-                            </div>
 
-                            <div className="filter-section">
-                                <h4>Compute  (4)</h4>
-                                <Grid container spacing={2}>
-                                    <Grid item size={6}><label><input type="checkbox" /> Azure</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Qualcomm</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Celebras</label></Grid>
-                                    <Grid item size={6}><label><input type="checkbox" /> Core42</label></Grid>
-                                </Grid>
-                            </div>
                             <div className="filter-section">
                                 <h4>Mode  (2)</h4>
                                 <Grid container spacing={2}>
@@ -271,9 +293,14 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                         state: {
                             modelName: model.name,
                             overview: model.desc,
+                            logo: model.logo
                         },
                     })}>
-                        <h3>{model.name}</h3>
+                        <div className='flex  gap-2 mb-2'>
+                            <img src={model.logo} width={30} height={30} alt={model.name} />
+                            <h3 style={{ marginBottom: 0 }}>{model.name}</h3>
+                        </div>
+
                         <p>{model.desc}</p>
                     </div>
                 ))}
@@ -332,12 +359,10 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
                             {/* Inner Model Name */}
                             <Box>
-                                {/* <Typography variant="body2" fontWeight={500} mb={1}>
-                                    Inner Model Name
-                                </Typography> */}
+
                                 <TextField
                                     fullWidth
-                                    placeholder="Enter internal model name"
+                                    placeholder="Enter model reference code"
                                     value={newModel.internalName}
                                     onChange={(e) =>
                                         setNewModel({ ...newModel, internalName: e.target.value })
@@ -349,25 +374,49 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
                             {/* Provider */}
                             <Box>
-                                {/* <Typography variant="body2" fontWeight={500} mb={1}>
-                                    Provider
-                                </Typography> */}
+
+
                                 <TextField
+                                    select
                                     fullWidth
-                                    placeholder="Provider e.g., OpenAI, Cerebras, Core42..."
-                                    value={newModel.provider}
-                                    onChange={(e) =>
-                                        setNewModel({ ...newModel, provider: e.target.value })
-                                    }
-                                    sx={inputSx}
-                                />
+                                    displayEmpty
+                                    value={newModel.cost}
+                                    onChange={(e) => setNewModel({ ...newModel, cost: e.target.value })}
+                                    sx={{
+                                        ...inputSx,
+                                        "& .MuiSelect-select": {
+                                            display: "flex",
+                                            alignItems: "center",
+                                            height: "44px !important",
+                                        },
+                                    }}
+
+                                    slotProps={{
+                                        select: {
+                                            native: false, // Set to false for custom rendering
+                                            displayEmpty: true,
+                                            renderValue: (selected) => {
+                                                if (!selected || selected === "") {
+                                                    return <span style={{ color: '#999' }}>Select Model Providers</span>;
+                                                }
+                                                const provider = providers.find(p => p.id === selected);
+                                                return provider ? provider.name : selected;
+                                            },
+                                        },
+                                    }}
+                                >
+
+                                    <MenuItem value="">Select Providers</MenuItem>
+                                    {providers.map(ind => (
+                                        <MenuItem value={ind.id}>{ind.name}</MenuItem>
+                                    ))}
+
+                                </TextField>
                             </Box>
 
                             {/* Max Tokens */}
                             <Box>
-                                {/* <Typography variant="body2" fontWeight={500} mb={1}>
-                                    Max Tokens
-                                </Typography> */}
+
                                 <TextField
                                     fullWidth
                                     placeholder="Max Tokens Eg.32781"
@@ -379,77 +428,125 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                                 />
                             </Box>
 
-                            {/* Cost & Model Type */}
 
 
-                            <Grid container spacing={2}>
 
-                                <Grid item size={6}>
-                                    {/* <Typography variant="body2" fontWeight={500} mb={1}>
-                                        Cost
-                                    </Typography> */}
-                                    <TextField
-                                        select
-                                        fullWidth
-                                        displayEmpty
-                                        value={newModel.cost}
-                                        onChange={(e) => setNewModel({ ...newModel, cost: e.target.value })}
-                                        sx={{
-                                            ...inputSx,
-                                            "& .MuiSelect-select": {
-                                                display: "flex",
-                                                alignItems: "center",
-                                                height: "44px !important",
-                                            },
-                                        }}
-                                        SelectProps={{
+                            <Box>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    value={newModel.type}
+                                    onChange={(e) =>
+                                        setNewModel({
+                                            ...newModel,
+                                            type: e.target.value,
+                                            url: "",
+                                            apikey: "",
+                                        })
+                                    }
+                                    sx={{
+                                        ...inputSx,
+                                        "& .MuiSelect-select": {
+                                            display: "flex",
+                                            alignItems: "center",
+                                            height: "44px !important",
+                                        },
+                                    }}
+
+                                    slotProps={{
+                                        select: {
+                                            native: false, // Set to false for custom rendering
                                             displayEmpty: true,
                                             renderValue: (selected) => {
-                                                if (selected || selected === "") {
-                                                    return <span style={{ color: '#999' }}>Select Cost</span>;
+                                                if (!selected || selected === "") {
+                                                    return <span style={{ color: '#999' }}>Select Model type</span>;
                                                 }
-                                                return selected;
+                                                const modelTypeSele = modelType.find(p => p.id === selected);
+                                                return modelTypeSele ? modelTypeSele.name : selected;
                                             },
-                                        }}
-                                    >
-                                        <MenuItem value="">Select Cost</MenuItem>
-                                        <MenuItem value="Low">Low</MenuItem>
-                                        <MenuItem value="Medium">Medium</MenuItem>
-                                        <MenuItem value="High">High</MenuItem>
-                                    </TextField>
-                                </Grid>
+                                        },
+                                    }}
+                                >
 
-                                <Grid item size={6}>
-                                    <TextField
-                                        select
-                                        fullWidth
-                                        value={newModel.type}
-                                        onChange={(e) => setNewModel({ ...newModel, type: e.target.value })}
+
+
+                                    <MenuItem value="">Select Model Type</MenuItem>
+                                    {modelType.map(ind => (
+                                        <MenuItem value={ind.id}>{ind.name}</MenuItem>
+                                    ))}
+
+                                </TextField>
+
+                            </Box>
+
+                            {newModel.type && (
+                                <>
+                                    <Box>
+                                        <TextField
+                                            fullWidth
+                                            placeholder="Enter API URL"
+                                            value={newModel.url}
+                                            onChange={(e) =>
+                                                setNewModel({ ...newModel, url: e.target.value })
+                                            }
+                                            sx={inputSx}
+                                        />
+                                    </Box>
+
+                                    <Box>
+                                        <TextField
+                                            fullWidth
+                                            placeholder="Enter API Key"
+                                            value={newModel.apikey}
+                                            onChange={(e) =>
+                                                setNewModel({ ...newModel, apikey: e.target.value })
+                                            }
+                                            sx={inputSx}
+                                        />
+                                    </Box>
+                                </>
+                            )}
+
+
+                            <Box>
+                                <input
+                                    accept="image/*"
+                                    type="file"
+                                    id="logo-upload"
+                                    style={{ display: 'none' }}
+                                    onChange={handleFileChange}
+                                />
+                                <label htmlFor="logo-upload">
+                                    <Button
+                                        variant="outlined"
+                                        component="span"
                                         sx={{
-                                            ...inputSx,
-                                            "& .MuiSelect-select": {
-                                                display: "flex",
-                                                alignItems: "center",
-                                                height: "44px !important",
-                                            },
-                                        }}
-                                        SelectProps={{
-                                            displayEmpty: true,
-                                            renderValue: (selected) => {
-                                                if (selected || selected === "") {
-                                                    return <span style={{ color: '#999' }}>Select Model Type</span>;
-                                                }
-                                                return selected;
-                                            },
+                                            borderColor: '#ddd',
+                                            color: '#666',
+                                            textTransform: 'none',
+                                            '&:hover': {
+                                                borderColor: '#999',
+                                                backgroundColor: '#f9f9f9'
+                                            }
                                         }}
                                     >
-                                        <MenuItem value="">Select Model Type</MenuItem>
-                                        <MenuItem value="API">API Hosted</MenuItem>
-                                        <MenuItem value="Self-Hosted">Self Hosted</MenuItem>
-                                        <MenuItem value="OpenSource">Open Source</MenuItem>
-                                    </TextField>
-                                </Grid>
-                            </Grid>
+                                        Upload Provider Logo
+                                    </Button>
+                                </label>
+                                {newModel.logo && (
+                                    <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <img
+                                            src={newModel.logo}
+                                            alt="Preview"
+                                            style={{ width: 60, height: 60, borderRadius: 4, objectFit: 'contain' }}
+                                        />
+                                        <Typography variant="body2" color="text.secondary">
+                                            Logo uploaded
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+
                         </Box>
                     </DialogContent>
 
@@ -504,7 +601,7 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                                     },
                                 }}
                             >
-                                Send Request
+                                Submit Request
                             </Button>
                         </Box>
                     </DialogActions>

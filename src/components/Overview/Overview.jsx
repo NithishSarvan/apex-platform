@@ -41,14 +41,7 @@ const Overview = () => {
                     <button className="explore-btn" onClick={() => navigate('/models')}>Explore models</button>
                 </div>
 
-                {/* <div className="hero-card">
 
-                    <h3>GPT-5</h3>
-                    <p>
-                        Advanced reasoning and generation for writing, coding, and problem solving.
-                    </p>
-                    <button className="check-btn">Check it out</button>
-                </div> */}
 
                 <Slider {...settings} className="hero-card">
                     <div>
@@ -77,7 +70,7 @@ const Overview = () => {
             </div>
 
             <div className='overview'>
-                <div className="card-container" style={{ border: "1px solid #d0d7df " }} >
+                <div className="card-container" style={{ border: "1px solid #d0d7df ", width: '480px' }} >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
                             <FiDatabase size={30} />
@@ -95,7 +88,7 @@ const Overview = () => {
                     <button className="card-button" onClick={() => navigate('/chat')}>Try Playground</button>
                 </div>
 
-                <div className="card-container" style={{ border: "1px solid #d0d7df  " }} >
+                <div className="card-container" style={{ border: "1px solid #d0d7df  ", width: '480px' }} >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
                             <FiSliders size={30} />
@@ -112,7 +105,7 @@ const Overview = () => {
                 </div>
             </div>
             <div className='overview'>
-                <div className="card-container" style={{ borderWidth: "0px 0px 1px 1px", borderStyle: "solid", borderColor: "#d0d7df" }}
+                <div className="card-container" style={{ border: "1px solid #d0d7df  ", width: '480px' }}
                 >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
@@ -128,32 +121,13 @@ const Overview = () => {
                     <button className="card-button" onClick={() => navigate('/data-training')}>Explore</button>
                 </div>
 
-                <div className="card-container" style={{ borderWidth: "0px 1px 1px 0px", borderStyle: "solid", borderColor: "#d0d7df" }} >
+                <div className="card-container" style={{ border: "1px solid #d0d7df  ", width: '480px' }} >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
                             <FiDatabase size={30} />
                         </div>
 
-                        <h1 className="card-title">Database</h1>
-                    </div>
-
-
-                    <p className="card-description">
-                        Connect and integrate external data sources to enable real-time access and retrieval of information.This allows to seamlessly pull and update data from multiple systems, databases, or APIs.
-                    </p>
-
-                    <button className="card-button" onClick={() => navigate('/data-training')}>Setup</button>
-                </div>
-            </div>
-
-            {/* <div className='overview'>
-                <div className="card-container">
-                    <div className='card-head-title' >
-                        <div className="card-icon-wrapper mb-3">
-                            <FiDatabase size={30} />
-                        </div>
-
-                        <h1 className="card-title">Database</h1>
+                        <h1 className="card-title">Data Source</h1>
                     </div>
 
 
@@ -163,57 +137,9 @@ const Overview = () => {
 
                     <button className="card-button" onClick={() => navigate('/data-sources')}>Setup</button>
                 </div>
+            </div>
 
-                <div className="card-container">
-                    <div className='card-head-title' >
-                        <div className="card-icon-wrapper mb-3">
-                            <FiSliders size={30} />
 
-                        </div>
-
-                        <h2 className="card-title">Fine Tuning</h2>
-                    </div>
-                    <p className="card-description">
-                        Train models with your data to get more relevant results. Leverage powerful pretrained models as a foundation, then fine-tune them to improve performance for your specific tasks, domains, or workflows.
-                    </p>
-
-                    <button className="card-button" onClick={() => navigate('/data-training')}>Try it</button>
-                </div>
-            </div>  */}
-
-            {/* 
-            <div className='overview'>
-                <div className="card-container">
-                    <div className='card-head-title' >
-                        <div className="card-icon-wrapper mb-3">
-                            <FiGitMerge size={30} />
-                        <span className="ai-badge">AI</span> 
-                        </div>
-
-                        <h2 className="card-title">Agent Builder</h2>
-                    </div>
-                    <p className="card-description">
-                        Intelligent assistants that work for your business. Automate tasks, streamline operations, and make real-time decisions—freeing your team to focus on growth. From support to workflows, they boost efficiency and drive innovation.
-                    </p>
-
-                    <button className="card-button" onClick={() => navigate('/workflows')} >Build</button>
-                </div>
-
-                <div className="card-container">
-                    <div className='card-head-title' >
-                        <div className="card-icon-wrapper mb-3">
-                            <FiCheck size={30} />
-                        </div>
-
-                        <h2 className="card-title">Rules</h2>
-                    </div>
-                    <p className="card-description">
-                        Define and configure guardrails, restrictions, and conditions to control system behavior and enforce compliance. This ensures that operations, data processing, and model outputs adhere to organizational policies and desired constraints
-                    </p>
-
-                    <button className="card-button" onClick={() => navigate('/rules-setup')} >Setup</button>
-                </div>
-            </div> */}
 
         </div >
     );

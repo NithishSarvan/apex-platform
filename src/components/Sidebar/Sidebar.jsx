@@ -15,7 +15,8 @@ import {
     FiZap
 } from 'react-icons/fi';
 import { MdOutlineChatBubbleOutline } from "react-icons/md";
-
+import { TbListDetails } from "react-icons/tb";
+import { BiCollapse } from "react-icons/bi";
 const Sidebar = ({ activeView, setActiveView, collapsed }) => {
 
     const [expanded, setExpanded] = useState({});
@@ -80,12 +81,13 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
             icon: <FiGrid />,
             label: 'Platform',
             children: [
-                { label: 'Overview', path: '/' },
-                { label: 'Providers', path: '/providers' },
-                { label: 'Model Catalog', path: '/models' },
-                { label: 'Data Sources', path: '/data-sources' },
-                { label: 'Model Training', path: '/model-training' },
+                { icon: <TbListDetails />, label: 'Overview', path: '/' },
+                { icon: <BiCollapse />, label: 'Providers', path: '/providers' },
+                { icon: <FiTarget />, label: 'Model Catalog', path: '/models' },
+                { icon: <FiDatabase />, label: 'Data Sources', path: '/data-sources' },
+                { icon: <FiSliders />, label: 'Model Training', path: '/model-training' },
                 {
+                    icon: <MdOutlineChatBubbleOutline />,
                     label: 'Playground',
                     children: [
                         { label: 'Standard', path: '/chat' },
@@ -137,7 +139,15 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                     >
                         <span className="icon">{item.icon}</span>
                         {!collapsed && level === 0 && <span className="label">{item.label}</span>}
-                        {!collapsed && level > 0 && <span className="label nested-label">{item.label}</span>}
+                        {/* {!collapsed && level > 0 && <span className="label nested-label">{item.label}</span>} */}
+                        {!collapsed && level > 0 && (
+                            <div className='flex gap-3 items-center'>
+                                <span className="nested-icon">{item.icon}</span>
+                                <span className="label nested-label ">
+                                    {item.label}
+                                </span>
+                            </div>
+                        )}
                         {!collapsed && (
                             <span className={`arrow ${isExpanded ? 'expanded' : ''}`}>
                                 ▼
@@ -169,8 +179,11 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                                             }
                                         }}
                                     >
+
                                         <div className="subitem-content">
-                                            {child.label}
+                                            <div className='flex gap-3 items-center'><span className="icon">{child.icon}</span>
+                                                {child.label}
+                                            </div>
                                         </div>
                                     </NavLink>
                                 )}
