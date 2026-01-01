@@ -65,18 +65,7 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
     };
 
     const menuItems = [
-        {
-            icon: <FiTarget />,
-            label: 'Onboarding',
-            path: '/onboarding',
-            children: [
-                { label: 'Client Management', path: '/client-mang' },
-                { label: 'License Management', path: '/license-management' },
-                { label: 'Usage Report', path: '/utilization-report' },
-                { label: 'Billing Summary', path: '/billing-management' },
-            ],
-            noBorderTop: true
-        },
+
         {
             icon: <FiGrid />,
             label: 'Platform',
@@ -96,6 +85,18 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                     ]
                 },
             ],
+        },
+        {
+            icon: <FiTarget />,
+            label: 'Onboarding',
+            // path: '/onboarding',
+            children: [
+                { label: 'Client Management', path: '/client-mang' },
+                { label: 'License Management', path: '/license-management' },
+                { label: 'Usage Report', path: '/utilization-report' },
+                { label: 'Billing Summary', path: '/billing-management' },
+            ],
+            noBorderTop: true
         },
         {
             icon: <FiBriefcase />,

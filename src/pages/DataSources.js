@@ -48,13 +48,14 @@ const DataSourcesStep = ({ data, onUpdate }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [newSource, setNewSource] = useState({
         name: '',
-        type: 'database',
+        type: '',
         connectionString: '',
         endpoint: '',
-        authentication: 'none',
+        authentication: '',
         apiKey: '',
         username: '',
-        password: ''
+        password: '',
+        frequency: ""
     });
 
     const sourceTypes = [
@@ -84,10 +85,10 @@ const DataSourcesStep = ({ data, onUpdate }) => {
         setShowAddModal(false);
         setNewSource({
             name: '',
-            type: 'database',
+            type: '',
             connectionString: '',
             endpoint: '',
-            authentication: 'none',
+            authentication: '',
             apiKey: '',
             username: '',
             password: ''
@@ -139,7 +140,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
         setShowAddModal(false);
         setNewSource({
             name: '',
-            type: 'database',
+            type: '',
             connectionString: '',
             endpoint: '',
             authentication: 'none',
@@ -207,7 +208,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                             <div key={source.id} className="p-4 border border-gray-200 rounded-lg">
                                 <div className="flex items-center justify-between mb-3">
                                     <div className="flex items-center gap-3">
-                                        <div className={`card-icon-wrapper mb-3 p-2 rounded-lg `}>
+                                        {/* <div className={`card-icon-wrapper mb-3 p-2 rounded-lg `}>
                                             {(() => {
                                                 const sourceType = sourceTypes.find(t => t.id === source.type);
                                                 if (sourceType?.icon) {
@@ -215,7 +216,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                                                 }
                                                 return null;
                                             })()}
-                                        </div>
+                                        </div> */}
                                         <div>
                                             <h5 className="font-semibold">{source.name}</h5>
                                             <p className="text-sm text-gray-500">{source.type.toUpperCase()}</p>
@@ -277,20 +278,10 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                 {/* Configuration & Preview */}
                 <div>
                     <div className="card">
-                        <h4 className="font-semibold mb-4">Sync Configuration</h4>
+                        <h4 className="font-semibold mb-4">Data Sync Configuration</h4>
 
                         <div className="space-y-4">
-                            <div>
-                                <label className="label">Sync Frequency</label>
-                                <select className="select">
-                                    <option>Real-time</option>
-                                    <option>Every 5 minutes</option>
-                                    <option>Every hour</option>
-                                    <option>Every 6 hours</option>
-                                    <option>Daily</option>
-                                    <option>Weekly</option>
-                                </select>
-                            </div>
+
 
                             <div>
                                 <label className="label">Data Retention</label>
@@ -349,29 +340,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                         </div>
                     </div>
 
-                    {/* Data Preview */}
-                    <div className="card mt-4">
-                        <h4 className="font-semibold mb-4">Data Preview</h4>
-                        <div className="text-sm text-gray-600 mb-2">Sample data from connected sources:</div>
-                        <div className="bg-gray-50 p-4 rounded border border-gray-200">
-                            <pre className="text-xs font-mono overflow-auto">
-                                {`[
-  {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "status": "active"
-  },
-  {
-    "id": 2,
-    "name": "Jane Smith",
-    "email": "jane@example.com",
-    "status": "inactive"
-  }
-]`}
-                            </pre>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -453,21 +422,44 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                                     }}
                                 >
                                     <MenuItem value="">Select Source Type</MenuItem>
-                                    <MenuItem value="database">Database</MenuItem>
-                                    <MenuItem value="api">API</MenuItem>
-                                    <MenuItem value="webhook">Webhook</MenuItem>
-                                    <MenuItem value="file">File</MenuItem>
+                                    <MenuItem value="Database">Database</MenuItem>
+                                    <MenuItem value="API">API</MenuItem>
+                                    <MenuItem value="Webhook">Webhook</MenuItem>
                                 </TextField>
                             </Box>
+
+
+
+                            {/* Provider */}
+                            {newSource.type === 'Database' && (
+                                <Box>
+                                    <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
+                                        Provider
+                                    </Typography>
+                                    <TextField
+                                        fullWidth
+                                        placeholder="e.g., PostgreSQL, MySQL, MongoDB... : "
+                                        value={newSource.provider}
+                                        onChange={(e) =>
+                                            setNewSource({ ...newSource, provider: e.target.value })
+                                        }
+                                        sx={inputSx}
+                                    />
+                                </Box>
+                            )}
+
 
                             {/* Connection String / Endpoint */}
                             <Box>
                                 <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
-                                    Connection String
+                                    {newSource.type === 'Database' ? "Connection String" : "Connection Url"}
                                 </Typography>
                                 <TextField
                                     fullWidth
-                                    placeholder="postgresql://username:password@localhost:5432/database"
+                                    placeholder={newSource.type === 'Database'
+                                        ? "postgresql://username:password@localhost:5432/database"
+                                        : "https://apex.ai/connect-model"
+                                    }
                                     value={newSource.connectionString}
                                     onChange={(e) =>
                                         setNewSource({ ...newSource, connectionString: e.target.value })
@@ -476,60 +468,113 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                                 />
                             </Box>
 
-                            {/* Provider */}
-                            <Box>
-                                <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
-                                    Provider
-                                </Typography>
-                                <TextField
-                                    fullWidth
-                                    placeholder="e.g., PostgreSQL, MySQL, MongoDB..."
-                                    value={newSource.provider}
-                                    onChange={(e) =>
-                                        setNewSource({ ...newSource, provider: e.target.value })
-                                    }
-                                    sx={inputSx}
-                                />
-                            </Box>
+
 
                             {/* Authentication */}
-                            <Box>
-                                <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
-                                    Authentication
-                                </Typography>
-                                <TextField
-                                    select
-                                    fullWidth
-                                    value={newSource.authentication}
-                                    onChange={(e) => setNewSource({ ...newSource, authentication: e.target.value })}
-                                    sx={{
-                                        ...inputSx,
-                                        "& .MuiSelect-select": {
-                                            display: "flex",
-                                            alignItems: "center",
-                                            height: "44px !important",
-                                        },
-                                    }}
-                                    SelectProps={{
-                                        displayEmpty: true,
-                                        renderValue: (selected) => {
-                                            if (!selected || selected === "") {
-                                                return <span style={{ color: '#999' }}>Select Authentication</span>;
-                                            }
-                                            return selected;
-                                        },
-                                    }}
-                                >
-                                    <MenuItem value="">Select Authentication</MenuItem>
-                                    <MenuItem value="none">No Authentication</MenuItem>
-                                    <MenuItem value="basic">Basic Auth</MenuItem>
-                                    <MenuItem value="apiKey">API Key</MenuItem>
-                                    <MenuItem value="oauth">OAuth 2.0</MenuItem>
-                                </TextField>
-                            </Box>
+                            {newSource.type !== 'Database' && (
+                                <Box>
+                                    <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
+                                        Authentication
+                                    </Typography>
+                                    <TextField
+                                        select
+                                        fullWidth
+                                        value={newSource.authentication}
+                                        onChange={(e) => setNewSource({ ...newSource, authentication: e.target.value })}
+                                        sx={{
+                                            ...inputSx,
+                                            "& .MuiSelect-select": {
+                                                display: "flex",
+                                                alignItems: "center",
+                                                height: "44px !important",
+                                            },
+                                        }}
+                                        SelectProps={{
+                                            displayEmpty: true,
+                                            renderValue: (selected) => {
+                                                if (!selected || selected === "") {
+                                                    return <span style={{ color: '#999' }}>Select Authentication</span>;
+                                                }
+                                                return selected;
+                                            },
+                                        }}
+                                    >
+                                        <MenuItem value="">Select Authentication</MenuItem>
+                                        <MenuItem value="No Authentication">No Authentication</MenuItem>
+                                        <MenuItem value="JWT Token">JWT Token</MenuItem>
+                                        <MenuItem value="API Key">API Key</MenuItem>
 
+                                    </TextField>
+                                </Box>
+                            )}
+
+                            {newSource.type &&
+                                newSource.type !== 'Database' &&
+                                newSource.authentication &&
+                                newSource.authentication !== 'No Authentication' && (
+                                    <Box>
+                                        <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
+                                            {newSource.authentication === 'JWT Token' ? "JWT Token" : "API Key"}
+                                        </Typography>
+                                        <TextField
+                                            fullWidth
+                                            placeholder={newSource.authentication === 'JWT Token'
+                                                ? "ez51hbjh15246681289nhgsrqw.sdsdqwq...."
+                                                : "AzXesids.."
+                                            }
+                                            value={newSource.connectionString}
+                                            onChange={(e) =>
+                                                setNewSource({ ...newSource, connectionString: e.target.value })
+                                            }
+                                            sx={inputSx}
+                                        />
+                                    </Box>
+                                )}
+
+                            {newSource.type === 'Database' && (
+                                <Box>
+                                    <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
+                                        Sync Frequency
+                                    </Typography>
+                                    <TextField
+                                        select
+                                        fullWidth
+                                        value={newSource.frequency}
+                                        onChange={(e) => setNewSource({ ...newSource, frequency: e.target.value })}
+                                        sx={{
+                                            ...inputSx,
+                                            "& .MuiSelect-select": {
+                                                display: "flex",
+                                                alignItems: "center",
+                                                height: "44px !important",
+                                            },
+                                        }}
+                                        SelectProps={{
+                                            displayEmpty: true,
+                                            renderValue: (selected) => {
+                                                if (!selected || selected === "") {
+                                                    return <span style={{ color: '#999' }}>Select Frequency</span>;
+                                                }
+                                                return selected;
+                                            },
+                                        }}
+                                    >
+                                        <MenuItem value="">Select Frequency</MenuItem>
+                                        <MenuItem value="Real-time">Real-time</MenuItem>
+                                        <MenuItem value="Every 5 minutes">Every 5 minutes</MenuItem>
+                                        <MenuItem value="Every hour">Every hour</MenuItem>
+                                        <MenuItem value="Every 6 hour">Every 6 hour</MenuItem>
+                                        <MenuItem value="Daily">Daily</MenuItem>
+                                        <MenuItem value="Weekly">Weekly</MenuItem>
+
+
+                                    </TextField>
+                                </Box>
+                            )}
 
                         </Box>
+
+
                     </DialogContent>
 
                     <Divider />
@@ -540,7 +585,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                             display: "flex",
                             justifyContent: "flex-end",
                             alignItems: "center",
-                            gap: 3,
+                            gap: 2,
                             width: "100%"
                         }}>
                             <Typography
@@ -564,9 +609,8 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                                 Cancel
                             </Typography>
 
-                            <Button
-                                onClick={handleAddSource}
-                                variant="contained"
+                            <Typography
+                                onClick={() => setShowAddModal(false)}
                                 sx={{
                                     backgroundColor: "#f4f5f6",
                                     textTransform: "none",
@@ -576,9 +620,31 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                                     color: " #2a1c2b",
                                     borderRadius: "4px",
                                     boxShadow: "none",
-                                    minWidth: "120px",
+
                                     "&:hover": {
                                         backgroundColor: "#b6b9b8ff",
+                                        boxShadow: "none",
+                                    },
+                                }}
+                            >
+                                Test Connection
+                            </Typography>
+
+                            <Button
+                                onClick={handleAddSource}
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: "#3df599ff",
+                                    textTransform: "none",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    padding: "6px 20px",
+                                    color: " #ffffffff",
+                                    borderRadius: "4px",
+                                    boxShadow: "none",
+                                    minWidth: "120px",
+                                    "&:hover": {
+                                        backgroundColor: "#a6f7dcff",
                                         boxShadow: "none",
                                     },
                                 }}
@@ -587,6 +653,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                             </Button>
                         </Box>
                     </DialogActions>
+
                 </Dialog>
             )}
 
