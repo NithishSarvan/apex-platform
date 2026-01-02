@@ -119,63 +119,109 @@ const ModelTrainingList = ({ showFilters, setShowFilters }) => {
                 />
             </div>
 
-            <div className="catalog-grid">
+
+            <Box>
+
+                <Box sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                    gap: 0
+                }}>
+                    {models.map((model) => (
+                        <Box
+                            key={model.id}
+                            onClick={() => navigate('/data-training', {
+                                state: {
+                                    modelName: model.name,
+                                    useCase: model.useCase,
+                                    sector: model.sector,
+                                    subDOmain: model.subDomain,
+                                },
+                            })}
+                            sx={{
+                                border: "1px solid #e0e0e0",
+                                borderRadius: 0,
+                                p: 2.5,
+                                cursor: "pointer",
+                                backgroundColor: "white",
+                                transition: "all 0.2s ease",
+                                "&:hover": {
+                                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                                    transform: "translateY(-2px)",
+                                },
+                                position: "relative",
+                            }}
+                        >
 
 
-                {models.map((model) => (
-                    <div key={model.id} className="model-card" onClick={() => navigate('/data-training', {
-                        state: {
-                            modelName: model.name,
-                            useCase: model.useCase,
-                            sector: model.sector,
-                            subDOmain: model.subDomain,
-                        },
-                    })}>
+                            {/* Model Header */}
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                                <img
+                                    src={model.logo}
+                                    alt={model.name}
+                                    style={{ width: 40, height: 40, objectFit: "contain" }}
+                                />
+                                <Box>
+                                    <Typography fontWeight="bold" fontSize="16px">
+                                        {model.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {model.useCase}
+                                    </Typography>
+                                </Box>
+                            </Box>
 
-                        <div style={{ display: "flex", gap: 5, alignItems: "center", mb: 1.5 }}>
-                            <img src={model.logo} width={20} height={20} alt={model.name} />
-                            <p className="model-name px-2">{model.name}</p>
-                        </div>
+                            {/* Model Description */}
+                            <Typography className="model-desc line-clamp-3" >
+                                {model.desc}
+                            </Typography>
 
-                        <div className="model-card-header">
-                            <h3 className="model-name">{model.useCase}</h3>
+                            {/* Model Details Grid */}
+                            <Box sx={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(2, 1fr)",
+                                gap: 1.5,
+                                mt: 2
+                            }}>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Sector
+                                    </Typography>
+                                    <Typography variant="body2" fontWeight="500">
+                                        {model.sector}
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Sub-domain
+                                    </Typography>
+                                    <Typography variant="body2" fontWeight="500">
+                                        {model.subDomain}
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Model Type
+                                    </Typography>
+                                    <Typography variant="body2" fontWeight="500">
+                                        {model.modelType}
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Max Tokens
+                                    </Typography>
+                                    <Typography variant="body2" fontWeight="500">
+                                        {model.maxToken}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </Box>
+                    ))}
+                </Box>
+            </Box>
 
-                        </div>
 
-                        <p className="model-desc">{model.desc}</p>
-
-                        <div className="model-parameters">
-                            <div className="parameter-row">
-                                <div className="parameter">
-                                    <span className="parameter-label">Sector</span>
-                                    <span className="parameter-value">{model.sector}</span>
-                                </div>
-                                <div className="parameter">
-                                    <span className="parameter-label">Sub-domain</span>
-                                    <span className="parameter-value">{model.subDomain}</span>
-                                </div>
-                            </div>
-
-                            <div className="parameter-row">
-                                <div className="parameter">
-                                    <span className="parameter-label">Model Type</span>
-                                    <span className="parameter-value">{model.modelType}</span>
-                                </div>
-                                <div className="parameter">
-                                    <span className="parameter-label">Max Tokens</span>
-                                    <span className="parameter-value">{model.maxToken}</span>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-
-
-                    </div>
-                ))}
-
-            </div>
 
             <OnboardingWizardDialog
                 open={showWizard}

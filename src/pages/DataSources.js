@@ -531,7 +531,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                                     </Box>
                                 )}
 
-                            {newSource.type === 'Database' && (
+                            {/* {newSource.type === 'Database' && (
                                 <Box>
                                     <Typography variant="body2" fontWeight={450} fontSize={'15px'} color='#2f2f32' mb={1}>
                                         Sync Frequency
@@ -570,7 +570,7 @@ const DataSourcesStep = ({ data, onUpdate }) => {
 
                                     </TextField>
                                 </Box>
-                            )}
+                            )} */}
 
                         </Box>
 

@@ -29,19 +29,103 @@ const gradientText = {
 
 const Realtime = () => {
 
-  const providers = [
-    { name: "OpenAI", logo: gpt },
-    { name: "Meta", logo: meta },
-    { name: "MBZUAI", logo: mbzuai },
-    { name: "Inception", logo: inception },
-    { name: "Mistral AI", logo: mistral },
-    { name: "Stability AI", logo: stablediffusion },
-    { name: "Anthropic Claude", logo: anthropicCalude },
-    { name: "DeepSeek", logo: deepseek },
-    { name: "Qwen", logo: qwen },
-    { name: "Cohere", logo: cohere },
-    { name: "xAI", logo: xai },
-  ];
+
+  const [providers, setProviders] = useState([
+    {
+      name: 'OpenAI',
+      logo: gpt,
+      description: 'Advanced AI models including GPT-4'
+    },
+    {
+      name: 'Anthropic',
+      logo: anthropicCalude,
+      description: 'Claude series models'
+    },
+    {
+      name: 'Google',
+      logo: xai,
+      description: 'Gemini and PaLM models'
+    },
+    {
+      name: 'Meta',
+      logo: meta,
+      description: 'Llama series models'
+    },
+    {
+      name: 'Microsoft',
+      logo: cohere,
+      description: 'Azure AI models'
+    },
+    {
+      name: 'Amazon',
+      logo: deepseek,
+      description: 'Bedrock models'
+    }
+  ]);
+
+
+  const [models, setModels] = useState([
+    {
+      id: 'gpt-4',
+      name: 'GPT-4o',
+      desc: `GPT-4o is OpenAI's latest model, offering faster, more efficient, and skillful multimodal reasoning for text inputs while maintaining improved accuracy, coherence, and responsiveness.`,
+      sector: 'Insurance',
+      subDomain: 'Finance',
+      modelType: 'API',
+      maxToken: '32768',
+      useCase: "Policy Inquiry & Claims Assistance",
+      logo: gpt
+    },
+    {
+      id: 'gpt-41', name: 'GPT-4o mini', desc: `OpenAI's most advanced model in the small models category supports text inputs and generates text outputs, making it ideal for smaller tasks.`,
+      sector: 'Insurance',
+      subDomain: 'Policy Quotation',
+      modelType: 'API',
+      maxToken: '32768',
+      useCase: "Workflow Automation",
+      logo: gpt
+    },
+    {
+      id: 'gpt-42', name: 'K2 Think Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Cerebras clusters.`,
+      sector: 'Insurance',
+      subDomain: 'Finance',
+      modelType: 'Self',
+      maxToken: '32768',
+      useCase: "Claims Assistance",
+      logo: mistral
+    },
+    {
+      id: 'gpt-43', name: 'gpt-oss-120b Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Core42 cloud located in the UAE region.`,
+      sector: 'Insurance',
+      subDomain: 'Agent',
+      modelType: 'API',
+      maxToken: '32768',
+      useCase: "Fraud Detection",
+      logo: gpt
+    },
+    {
+      id: 'gpt-44', name: 'Whisper', desc: `Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitask model that can perform multilingual speech recognition as well as speech translation and language identification.`,
+      sector: 'Others',
+      subDomain: 'Customer',
+      modelType: 'Self',
+      maxToken: '32768',
+      useCase: "Policy Renewal & Alerts",
+      logo: gpt
+    },
+    {
+      id: 'gpt-45', name: 'Llama 3 70B', desc: `Llama 3 is an auto-regressive language model, part of the Llama 3 family, and the next generation of Meta's open-source LLMs. It is one of the most capable openly available LLMs with improved reasoning capabilities compared to its previous models.`,
+      sector: 'Others',
+      subDomain: 'Finance',
+      modelType: 'Self',
+      maxToken: '32768',
+      useCase: "Policy Inquiry & Customer Support",
+      logo: qwen
+    },
+
+  ]);
+
+
+
   const [aiModel, setAiModel] = useState(false)
   const [showKey, setShowKey] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -76,10 +160,41 @@ const Realtime = () => {
     },
   };
 
+  const [activeTab, setActiveTab] = useState('trained'); // 'trained' or 'standard'
+  const [selectedModel, setSelectedModel] = useState(null);
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [selectedModelName, setSelectedModelName] = useState('Gpt-5');
+  const [selectedModelLogo, setSelectedModelLogo] = useState(gpt);
+
+  const handleModelSelect = (model) => {
+    setSelectedModel(model);
+    setSelectedProvider(null); // Clear provider selection
+  };
+
+  const handleProviderSelect = (provider) => {
+    setSelectedProvider(provider);
+    setSelectedModel(null); // Clear model selection
+  };
+
+  const handleApplySelection = () => {
+    if (selectedModel) {
+      console.log("Selected Model:", selectedModel);
+      setSelectedModelName(selectedModel.name);
+      setSelectedModelLogo(selectedModel.logo);
+    } else if (selectedProvider) {
+      console.log("Selected Provider:", selectedProvider);
+      setSelectedModelName(selectedProvider.name);
+      setSelectedModelLogo(selectedProvider.logo);
+    }
+    setAiModel(false);
+  };
+
 
   return (
     <div className='main-content main-content-chat'>
+
       <Box sx={{ display: "flex", width: "100%" }} >
+
         <Box
           sx={{
             height: "100%",
@@ -89,9 +204,6 @@ const Realtime = () => {
             flexDirection: "column",
           }}
         >
-
-
-
 
           <Box
             className="realtime-header"
@@ -110,9 +222,9 @@ const Realtime = () => {
                 onClick={() => setAiModel(true)}
                 sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}
               >
-                <img src={gpt} alt="GPT" width={40} />
+                <img src={selectedModelLogo} alt="GPT" width={40} />
                 <Typography variant="h6" fontWeight="bold">
-                  Realtime
+                  {selectedModelName}
                 </Typography>
               </Box>
             </Box>
@@ -323,36 +435,30 @@ const Realtime = () => {
 
             className="realtime-subscription"
           >
-            {/* <img src={dataset} />
-            <Typography variant="h6" fontWeight="500">
-              Subscription
-            </Typography>
-            <p style={{ width: "40%", fontSize: "14px", textAlign: "center", color: "gray", marginBottom: "10px", paddingBottom: '10px', paddingTop: '10px' }} >Please contact our support team to activate your subscription or get assistance, or click "Contact Us" below.</p>
-            <button className="check-btn flex gap-2 items-center py-2"><LuHeadset />Contact Us</button> */}
+
           </Box>
 
-          {/* ================= BOTTOM INPUT ================= */}
+
           <Box
             sx={{
               width: "800px",
               marginLeft: "auto",
               marginRight: "auto",
+              position: 'fixed', // Changed from absolute to fixed
+              zIndex: 1000, // Reduced from 9999 to 1000 (less than dialog's default 1300)
+              bottom: '20px', // Adjusted from 5px
+              left: '60%',
+              transform: 'translateX(-50%)',
+              backgroundColor: '#fff', // Added background to ensure visibility
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // Optional shadow
+              borderRadius: '12px', // Optional rounded corners
+              border: '1px solid #d0ccccff',
 
-              position: 'absolute',
-              zIndex: '9999',
-              bottom: '5px',
-              left: '50%',
-              transform: 'translate(-50%, 0px)',
-              // alignItems: "center",
-              // justifyContent: "center"
             }}
-          // className="realtime-input-box"
 
           >
 
-            {/* <Typography sx={{ color: "#0a7b6aff", textAlign: "center", fontSize: "15px", margin: "20px 0px" }}>
-            Subscribe now and start exploring the playground
-          </Typography> */}
+
 
 
             <Box
@@ -428,14 +534,328 @@ const Realtime = () => {
             </Box>
           </Box>
 
-
-
         </Box>
 
 
-        {/* configuration */}
+        <Dialog
+          open={aiModel}
+          maxWidth="lg"
+          fullWidth
+          PaperProps={{
+            sx: {
+              overflow: "hidden",
+              borderRadius: 3,
+              maxHeight: "90vh", // Limit overall dialog height
+              display: "flex",
+              flexDirection: "column",
+            },
+          }}
+        >
+          {/* Header */}
+          <DialogTitle sx={{ pb: 1, flexShrink: 0 }}>
+            <Typography variant="h6" fontWeight="bold">Select Model</Typography>
+          </DialogTitle>
+
+          <Divider />
+
+          {/* Body - This will take available space and scroll if needed */}
+          <Box sx={{
+            display: "flex",
+            flex: 1,
+            minHeight: 0, // Important for flex children to scroll
+            overflow: "hidden"
+          }}>
+            {/* Left Sidebar */}
+            <Box className="chat-pop-left" sx={{
+              width: "220px",
+              flexShrink: 0,
+
+              overflowY: "auto" // Add scroll if content overflows
+            }}>
+              {[
+                { step: "01", label: "Trained Models", id: "trained", active: activeTab === 'trained' },
+                { step: "02", label: "Standard Models", id: "standard", active: activeTab === 'standard' },
+              ].map((item) => (
+                <Box
+                  key={item.step}
+                  onClick={() => setActiveTab(item.id)}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 2,
+                    cursor: "pointer",
+                    color: item.active ? "#00bfa5" : "#666",
+                    fontWeight: item.active ? "bold" : "normal",
+                  }}
+                >
+                  <Typography sx={{ width: 30, fontWeight: "bold" }}>
+                    {item.step}
+                  </Typography>
+                  <Typography fontWeight="bold">{item.label}</Typography>
+                </Box>
+              ))}
+            </Box>
+
+            {/* Right Content Area */}
+            <Box
+              sx={{
+                flex: 1,
+                p: 3,
+                overflowY: "auto",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              {/* Trained Models Section */}
+              {activeTab === 'trained' && (
+                <Box>
+                  <Typography variant="h6" fontWeight="bold" mb={3}>
+                    Select from Trained Models
+                  </Typography>
+                  <Box sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                    gap: 2
+                  }}>
+                    {models.map((model) => (
+                      <Box
+                        key={model.id}
+                        onClick={() => handleModelSelect(model)}
+                        sx={{
+                          border: selectedModel?.id === model.id ? "2px solid #00d4aa" : "1px solid #e0e0e0",
+                          borderRadius: 2,
+                          p: 2.5,
+                          cursor: "pointer",
+                          backgroundColor: selectedModel?.id === model.id ? "rgba(0, 212, 170, 0.05)" : "white",
+                          transition: "all 0.2s ease",
+                          "&:hover": {
+                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                            transform: "translateY(-2px)",
+                          },
+                          position: "relative",
+                        }}
+                      >
+                        {/* Selection Indicator */}
+                        {selectedModel?.id === model.id && (
+                          <Box sx={{
+                            position: "absolute",
+                            top: 10,
+                            right: 10,
+                            backgroundColor: "#00d4aa",
+                            color: "white",
+                            borderRadius: "50%",
+                            width: 20,
+                            height: 20,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "12px",
+                          }}>
+                            ✓
+                          </Box>
+                        )}
+
+                        {/* Model Header */}
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                          <img
+                            src={model.logo}
+                            alt={model.name}
+                            style={{ width: 40, height: 40, objectFit: "contain" }}
+                          />
+                          <Box>
+                            <Typography fontWeight="bold" fontSize="16px">
+                              {model.name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {model.useCase}
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        {/* Model Description */}
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontSize: "13px" }}>
+                          {model.desc}
+                        </Typography>
+
+                        {/* Model Details Grid */}
+                        <Box sx={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(2, 1fr)",
+                          gap: 1.5,
+                          mt: 2
+                        }}>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Sector
+                            </Typography>
+                            <Typography variant="body2" fontWeight="500">
+                              {model.sector}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Sub-domain
+                            </Typography>
+                            <Typography variant="body2" fontWeight="500">
+                              {model.subDomain}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Model Type
+                            </Typography>
+                            <Typography variant="body2" fontWeight="500">
+                              {model.modelType}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Max Tokens
+                            </Typography>
+                            <Typography variant="body2" fontWeight="500">
+                              {model.maxToken}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              )}
+
+              {/* Standard Models Section */}
+              {activeTab === 'standard' && (
+                <Box>
+                  <Typography variant="h6" fontWeight="bold" mb={3}>
+                    Select from Standard Models
+                  </Typography>
+                  <Box sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+                    gap: 2
+                  }}>
+                    {providers.map((provider) => (
+                      <Box
+                        key={provider.name}
+                        onClick={() => handleProviderSelect(provider)}
+                        sx={{
+                          border: selectedProvider?.name === provider.name ? "2px solid #00d4aa" : "1px solid #e0e0e0",
+                          borderRadius: 2,
+                          p: 3,
+                          cursor: "pointer",
+                          backgroundColor: selectedProvider?.name === provider.name ? "rgba(0, 212, 170, 0.05)" : "white",
+                          transition: "all 0.2s ease",
+                          "&:hover": {
+                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                            transform: "translateY(-2px)",
+                          },
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          position: "relative",
+                          minHeight: "140px",
+                        }}
+                      >
+                        {/* Selection Indicator */}
+                        {selectedProvider?.name === provider.name && (
+                          <Box sx={{
+                            position: "absolute",
+                            top: 10,
+                            right: 10,
+                            backgroundColor: "#00d4aa",
+                            color: "white",
+                            borderRadius: "50%",
+                            width: 20,
+                            height: 20,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "12px",
+                          }}>
+                            ✓
+                          </Box>
+                        )}
+
+                        <img
+                          src={provider.logo}
+                          alt={provider.name}
+                          style={{ width: 60, height: 60, objectFit: "contain", marginBottom: 12 }}
+                        />
+                        <Typography fontWeight="bold" fontSize="18px">
+                          {provider.name}
+                        </Typography>
+                        {provider.description && (
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontSize: "13px" }}>
+                            {provider.description}
+                          </Typography>
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              )}
+            </Box>
+          </Box>
+
+          {/* Footer - Fixed at bottom */}
+          <Box sx={{
+            flexShrink: 0, // Prevent footer from shrinking
+            borderTop: 1,
+            borderColor: "divider",
+            backgroundColor: "#fafafa",
+            p: 2,
+          }}>
+            <Box sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 1,
+              px: 1,
+            }}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setAiModel(false);
+                  setSelectedModel(null);
+                  setSelectedProvider(null);
+                }}
+                sx={{
+                  borderColor: "#e0e0e0",
+                  color: "#666",
+                  minWidth: "100px",
+                  "&:hover": {
+                    borderColor: "#00d4aa",
+                    backgroundColor: "rgba(0, 212, 170, 0.05)",
+                  }
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                disabled={!selectedModel && !selectedProvider}
+                sx={{
+                  backgroundColor: "#00d4aa",
+                  minWidth: "100px",
+                  "&:hover": {
+                    backgroundColor: "#00b894",
+                  },
+                  "&.Mui-disabled": {
+                    backgroundColor: "#e0e0e0",
+                    color: "#a6a6ae",
+                  }
+                }}
+                onClick={handleApplySelection}
+              >
+                Apply
+              </Button>
+            </Box>
+          </Box>
+        </Dialog>
 
       </Box >
+
     </div >
   );
 };

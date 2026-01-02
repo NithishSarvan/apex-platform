@@ -39,11 +39,21 @@ import {
 import { MdHttp, MdOutlineDragIndicator } from 'react-icons/md';
 import { TbApi, TbSelector, TbBinary } from 'react-icons/tb';
 import { LuTextCursor } from "react-icons/lu";
-import gpt from "../../assets/gpt-JRKBi7sz.svg";
-import mistral from "../../assets/mistral.svg";
-import qwen from "../../assets/qwen.svg";
 
 
+import gpt from "../../assets/gpt-JRKBi7sz.svg"
+import meta from "../../assets/meta-svg.svg"
+import mbzuai from "../../assets/mbzuai.svg"
+import inception from "../../assets/inception.svg"
+import mistral from "../../assets/mistral.svg"
+import stablediffusion from "../../assets/stablediffusion.png"
+import anthropicCalude from "../../assets/anthropicCalude.svg"
+import deepseek from "../../assets/deepseek.svg"
+import qwen from "../../assets/qwen.svg"
+import cohere from "../../assets/cohere.svg"
+import xai from "../../assets/xai.svg"
+import dataset from "../../assets/dataset.svg"
+import { Box, Typography, } from "@mui/material";
 export const ApiPlaygroundPage = () => {
     // API Configuration
     const [apiConfig, setApiConfig] = useState({
@@ -826,13 +836,47 @@ export const ApiPlaygroundPage = () => {
     };
 
     const tabs = [
-        { id: 'modelselection', name: 'Trained Models', icon: <FiSliders /> },
+        { id: 'modelselection', name: 'Models', icon: <FiSliders /> },
         { id: 'endpoints', name: 'Endpoints', icon: <FiDatabase /> },
-        { id: 'designer', name: 'API Designer', icon: <FiSettings /> },
+        { id: 'designer', name: 'API', icon: <FiSettings /> },
         { id: 'test', name: 'API Test', icon: <FiPlay /> },
         { id: 'schema', name: 'JSON Schema', icon: <FiCode /> },
 
     ];
+
+
+    const [providers, setProviders] = useState([
+        {
+            name: 'OpenAI',
+            logo: gpt,
+            description: 'Advanced AI models including GPT-4'
+        },
+        {
+            name: 'Anthropic',
+            logo: anthropicCalude,
+            description: 'Claude series models'
+        },
+        {
+            name: 'Google',
+            logo: xai,
+            description: 'Gemini and PaLM models'
+        },
+        {
+            name: 'Meta',
+            logo: meta,
+            description: 'Llama series models'
+        },
+        {
+            name: 'Microsoft',
+            logo: cohere,
+            description: 'Azure AI models'
+        },
+        {
+            name: 'Amazon',
+            logo: deepseek,
+            description: 'Bedrock models'
+        }
+    ]);
 
 
     const [models, setModels] = useState([
@@ -895,6 +939,32 @@ export const ApiPlaygroundPage = () => {
 
     ]);
 
+
+    const [selectedProvider, setSelectedProvider] = useState(null);
+    const [selectedModel, setSelectedModel] = useState(null);
+
+    const handleProviderSelect = (provider) => {
+        setSelectedProvider(provider);
+        setSelectedModel(null); // Clear model selection
+    };
+
+    const handleModelSelect = (modelId) => {
+        setSelectedModel(modelId);
+        setSelectedProvider(null); // Clear provider selection
+        setSelectedModelId(prevId => prevId === modelId ? null : modelId);
+    };
+
+    const handleApplySelection = () => {
+        // if (selectedModel) {
+        //     console.log("Selected Model:", selectedModel);
+
+        // } else if (selectedProvider) {
+        //     console.log("Selected Provider:", selectedProvider);
+
+        // }
+
+    };
+
     const handleLoadEndpoint = (endpoint) => {
         setSelectedEndpoint(endpoint);
         setApiConfig({
@@ -953,10 +1023,9 @@ export const ApiPlaygroundPage = () => {
 
     const [selectedModelId, setSelectedModelId] = useState(null);
 
-    const handleModelSelect = (modelId) => {
-        // Toggle selection - if clicking the same model, deselect it
-        setSelectedModelId(prevId => prevId === modelId ? null : modelId);
-    };
+
+
+    const [activeModelTab, setActiveModelTab] = useState('trained');
 
     return (
         <div className="main-content">
@@ -997,61 +1066,236 @@ export const ApiPlaygroundPage = () => {
                 </div>
 
                 {activeTab === 'modelselection' && (
-                    <div className="catalog-grid">
-                        {models.map((model) => (
-                            <div
-                                key={model.id}
-                                className={`model-card ${selectedModelId === model.id ? 'selected' : ''}`}
-                                onClick={() => handleModelSelect(model.id)}
-                            >
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                    <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
-                                        <img src={model.logo} width={20} height={20} alt={model.name} />
-                                        <p className="model-name px-2">{model.name}</p>
-                                    </div>
-                                    <input
-                                        type="radio"
-                                        name="model-selection"
-                                        className="model-radio"
-                                        checked={selectedModelId === model.id}
-                                        onChange={() => handleModelSelect(model.id)}
-                                        onClick={(e) => e.stopPropagation()} // Prevent double triggering
-                                    />
+
+                    <div>
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+                            <div className="flex items-center justify-between ">
+
+                                <div className="flex items-center px-5"> {/* Added wrapper for left side content */}
+                                    <h1 className="font-semibold text-lg ">{activeModelTab === 'trained' ? "Select from trained models " : "Select from standard models"}</h1>
                                 </div>
 
-                                <div className="model-card-header">
-                                    <h3 className="model-name">{model.useCase}</h3>
+                                <div className="flex items-center gap-0  bg-gray-100 rounded-lg p-1">
+                                    <button
+                                        onClick={() => setActiveModelTab('trained')}
+                                        className={`px-8 py-2 rounded-md text-sm font-medium transition-all ${activeModelTab === 'trained' ? 'bg-white text-[#02b499] shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>
+                                        Trained Models
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveModelTab('standard')}
+                                        className={`px-8 py-2 rounded-md text-sm font-medium transition-all ${activeModelTab === 'standard' ? 'bg-white text-[#02b499] shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>
+                                        Standard Models
+                                    </button>
                                 </div>
-
-                                <p className="model-desc">{model.desc}</p>
-
-                                <div className="model-parameters">
-                                    <div className="parameter-row">
-                                        <div className="parameter">
-                                            <span className="parameter-label">Sector</span>
-                                            <span className="parameter-value">{model.sector}</span>
-                                        </div>
-                                        <div className="parameter">
-                                            <span className="parameter-label">Sub-domain</span>
-                                            <span className="parameter-value">{model.subDomain}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="parameter-row">
-                                        <div className="parameter">
-                                            <span className="parameter-label">Model Type</span>
-                                            <span className="parameter-value">{model.modelType}</span>
-                                        </div>
-                                        <div className="parameter">
-                                            <span className="parameter-label">Max Tokens</span>
-                                            <span className="parameter-value">{model.maxToken}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
 
                             </div>
-                        ))}
+                        </div>
+
+
+                        <Box sx={{
+                            display: "flex",
+                            flex: 1,
+                            minHeight: 0,
+                            overflow: "hidden"
+                        }}>
+
+                            <Box
+                                sx={{
+                                    flex: 1,
+                                    p: 0,
+                                    overflowY: "auto",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}
+                            >
+                                {/* Trained Models Section */}
+                                {activeModelTab === 'trained' && (
+                                    <Box>
+
+                                        <Box sx={{
+                                            display: "grid",
+                                            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                                            gap: 0
+                                        }}>
+                                            {models.map((model) => (
+                                                <Box
+                                                    key={model.id}
+                                                    onClick={() => handleModelSelect(model)}
+                                                    sx={{
+                                                        border: selectedModel?.id === model.id ? "2px solid #00d4aa" : "1px solid #e0e0e0",
+                                                        borderRadius: 0,
+                                                        p: 2.5,
+                                                        cursor: "pointer",
+                                                        backgroundColor: selectedModel?.id === model.id ? "rgba(0, 212, 170, 0.05)" : "white",
+                                                        transition: "all 0.2s ease",
+                                                        "&:hover": {
+                                                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                                                            transform: "translateY(-2px)",
+                                                        },
+                                                        position: "relative",
+                                                    }}
+                                                >
+                                                    {/* Selection Indicator */}
+                                                    {selectedModel?.id === model.id && (
+                                                        <Box sx={{
+                                                            position: "absolute",
+                                                            top: 10,
+                                                            right: 10,
+                                                            backgroundColor: "#00d4aa",
+                                                            color: "white",
+                                                            borderRadius: "50%",
+                                                            width: 20,
+                                                            height: 20,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            fontSize: "12px",
+                                                        }}>
+                                                            ✓
+                                                        </Box>
+                                                    )}
+
+                                                    {/* Model Header */}
+                                                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                                                        <img
+                                                            src={model.logo}
+                                                            alt={model.name}
+                                                            style={{ width: 40, height: 40, objectFit: "contain" }}
+                                                        />
+                                                        <Box>
+                                                            <Typography fontWeight="bold" fontSize="16px">
+                                                                {model.name}
+                                                            </Typography>
+                                                            <Typography variant="body2" color="text.secondary">
+                                                                {model.useCase}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+
+                                                    {/* Model Description */}
+                                                    <Typography className="model-desc line-clamp-3" >
+                                                        {model.desc}
+                                                    </Typography>
+
+                                                    {/* Model Details Grid */}
+                                                    <Box sx={{
+                                                        display: "grid",
+                                                        gridTemplateColumns: "repeat(2, 1fr)",
+                                                        gap: 1.5,
+                                                        mt: 2
+                                                    }}>
+                                                        <Box>
+                                                            <Typography variant="caption" color="text.secondary">
+                                                                Sector
+                                                            </Typography>
+                                                            <Typography variant="body2" fontWeight="500">
+                                                                {model.sector}
+                                                            </Typography>
+                                                        </Box>
+                                                        <Box>
+                                                            <Typography variant="caption" color="text.secondary">
+                                                                Sub-domain
+                                                            </Typography>
+                                                            <Typography variant="body2" fontWeight="500">
+                                                                {model.subDomain}
+                                                            </Typography>
+                                                        </Box>
+                                                        <Box>
+                                                            <Typography variant="caption" color="text.secondary">
+                                                                Model Type
+                                                            </Typography>
+                                                            <Typography variant="body2" fontWeight="500">
+                                                                {model.modelType}
+                                                            </Typography>
+                                                        </Box>
+                                                        <Box>
+                                                            <Typography variant="caption" color="text.secondary">
+                                                                Max Tokens
+                                                            </Typography>
+                                                            <Typography variant="body2" fontWeight="500">
+                                                                {model.maxToken}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+                                                </Box>
+                                            ))}
+                                        </Box>
+                                    </Box>
+                                )}
+
+                                {/* Standard Models Section */}
+                                {activeModelTab === 'standard' && (
+                                    <Box>
+
+                                        <Box sx={{
+                                            display: "grid",
+                                            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+                                            gap: 0
+                                        }}>
+                                            {providers.map((provider) => (
+                                                <Box
+                                                    key={provider.name}
+                                                    onClick={() => handleProviderSelect(provider)}
+                                                    sx={{
+                                                        border: selectedProvider?.name === provider.name ? "2px solid #00d4aa" : "1px solid #e0e0e0",
+                                                        borderRadius: 0,
+                                                        p: 3,
+                                                        cursor: "pointer",
+                                                        backgroundColor: selectedProvider?.name === provider.name ? "rgba(0, 212, 170, 0.05)" : "white",
+                                                        transition: "all 0.2s ease",
+                                                        "&:hover": {
+                                                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                                                            transform: "translateY(-2px)",
+                                                        },
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        textAlign: "center",
+                                                        position: "relative",
+                                                        minHeight: "140px",
+                                                    }}
+                                                >
+                                                    {/* Selection Indicator */}
+                                                    {selectedProvider?.name === provider.name && (
+                                                        <Box sx={{
+                                                            position: "absolute",
+                                                            top: 10,
+                                                            right: 10,
+                                                            backgroundColor: "#00d4aa",
+                                                            color: "white",
+                                                            borderRadius: "50%",
+                                                            width: 20,
+                                                            height: 20,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            fontSize: "12px",
+                                                        }}>
+                                                            ✓
+                                                        </Box>
+                                                    )}
+
+                                                    <img
+                                                        src={provider.logo}
+                                                        alt={provider.name}
+                                                        style={{ width: 60, height: 60, objectFit: "contain", marginBottom: 12 }}
+                                                    />
+                                                    <Typography fontWeight="bold" fontSize="18px">
+                                                        {provider.name}
+                                                    </Typography>
+                                                    {provider.description && (
+                                                        <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontSize: "13px" }}>
+                                                            {provider.description}
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                            ))}
+                                        </Box>
+                                    </Box>
+                                )}
+                            </Box>
+                        </Box>
                     </div>
                 )}
 
