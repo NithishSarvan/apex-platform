@@ -32,12 +32,17 @@ import {
     FiChevronsRight,
     FiLink,
     FiX,
+    FiSliders
 
 
 } from 'react-icons/fi';
 import { MdHttp, MdOutlineDragIndicator } from 'react-icons/md';
 import { TbApi, TbSelector, TbBinary } from 'react-icons/tb';
 import { LuTextCursor } from "react-icons/lu";
+import gpt from "../../assets/gpt-JRKBi7sz.svg";
+import mistral from "../../assets/mistral.svg";
+import qwen from "../../assets/qwen.svg";
+
 
 export const ApiPlaygroundPage = () => {
     // API Configuration
@@ -186,7 +191,7 @@ export const ApiPlaygroundPage = () => {
     const [responseData, setResponseData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState('endpoints');
+    const [activeTab, setActiveTab] = useState('modelselection');
 
     // UI State
     const [showApiKey, setShowApiKey] = useState(false);
@@ -821,12 +826,74 @@ export const ApiPlaygroundPage = () => {
     };
 
     const tabs = [
+        { id: 'modelselection', name: 'Trained Models', icon: <FiSliders /> },
         { id: 'endpoints', name: 'Endpoints', icon: <FiDatabase /> },
         { id: 'designer', name: 'API Designer', icon: <FiSettings /> },
         { id: 'test', name: 'API Test', icon: <FiPlay /> },
         { id: 'schema', name: 'JSON Schema', icon: <FiCode /> },
 
     ];
+
+
+    const [models, setModels] = useState([
+        {
+            id: 'gpt-4',
+            name: 'GPT-4o',
+            desc: `GPT-4o is OpenAI's latest model, offering faster, more efficient, and skillful multimodal reasoning for text inputs while maintaining improved accuracy, coherence, and responsiveness.`,
+            sector: 'Insurance',
+            subDomain: 'Finance',
+            modelType: 'API',
+            maxToken: '32768',
+            useCase: "Policy Inquiry & Claims Assistance",
+            logo: gpt
+        },
+        {
+            id: 'gpt-41', name: 'GPT-4o mini', desc: `OpenAI's most advanced model in the small models category supports text inputs and generates text outputs, making it ideal for smaller tasks.`,
+            sector: 'Insurance',
+            subDomain: 'Policy Quotation',
+            modelType: 'API',
+            maxToken: '32768',
+            useCase: "Workflow Automation",
+            logo: gpt
+        },
+        {
+            id: 'gpt-42', name: 'K2 Think Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Cerebras clusters.`,
+            sector: 'Insurance',
+            subDomain: 'Finance',
+            modelType: 'Self',
+            maxToken: '32768',
+            useCase: "Claims Assistance",
+            logo: mistral
+        },
+        {
+            id: 'gpt-43', name: 'gpt-oss-120b Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Core42 cloud located in the UAE region.`,
+            sector: 'Insurance',
+            subDomain: 'Agent',
+            modelType: 'API',
+            maxToken: '32768',
+            useCase: "Fraud Detection",
+            logo: gpt
+        },
+        {
+            id: 'gpt-44', name: 'Whisper', desc: `Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitask model that can perform multilingual speech recognition as well as speech translation and language identification.`,
+            sector: 'Others',
+            subDomain: 'Customer',
+            modelType: 'Self',
+            maxToken: '32768',
+            useCase: "Policy Renewal & Alerts",
+            logo: gpt
+        },
+        {
+            id: 'gpt-45', name: 'Llama 3 70B', desc: `Llama 3 is an auto-regressive language model, part of the Llama 3 family, and the next generation of Meta's open-source LLMs. It is one of the most capable openly available LLMs with improved reasoning capabilities compared to its previous models.`,
+            sector: 'Others',
+            subDomain: 'Finance',
+            modelType: 'Self',
+            maxToken: '32768',
+            useCase: "Policy Inquiry & Customer Support",
+            logo: qwen
+        },
+
+    ]);
 
     const handleLoadEndpoint = (endpoint) => {
         setSelectedEndpoint(endpoint);
@@ -884,13 +951,25 @@ export const ApiPlaygroundPage = () => {
         setSavedEndpoints([...savedEndpoints, duplicate]);
     };
 
+    const [selectedModelId, setSelectedModelId] = useState(null);
+
+    const handleModelSelect = (modelId) => {
+        // Toggle selection - if clicking the same model, deselect it
+        setSelectedModelId(prevId => prevId === modelId ? null : modelId);
+    };
+
     return (
         <div className="main-content">
             <div style={{ marginLeft: "0px", marginRight: "auto", width: "90%" }} className='flex flex-col h-full'>
                 {/* Header */}
-                <div className="flex gap-2 items-center">
-                    <div>
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
                         <h1 className="text-2xl font-bold text-black-500">API Designer</h1>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button className="save-conf-btn align-right">
+                            Save
+                        </button>
                     </div>
                 </div>
 
@@ -898,53 +977,7 @@ export const ApiPlaygroundPage = () => {
                     <p className="text-sm text-gray-600">Design custom API endpoints with dynamic request/response structures</p>
                 </div>
 
-                {/* API Config Card */}
-                {/* <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg p-4 mb-6">
-                    <div className="grid grid-cols-4 gap-4">
-                        <div>
-                            <label className="text-xs text-gray-600 mb-1">API Name</label>
-                            <input
-                                type="text"
-                                value={apiConfig.name}
-                                onChange={(e) => setApiConfig({ ...apiConfig, name: e.target.value })}
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs text-gray-600 mb-1">Base URL</label>
-                            <input
-                                type="text"
-                                value={apiConfig.baseUrl}
-                                onChange={(e) => setApiConfig({ ...apiConfig, baseUrl: e.target.value })}
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs text-gray-600 mb-1">Endpoint</label>
-                            <input
-                                type="text"
-                                value={apiConfig.endpoint}
-                                onChange={(e) => setApiConfig({ ...apiConfig, endpoint: e.target.value })}
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                                placeholder="/v1/endpoint"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs text-gray-600 mb-1">Method</label>
-                            <select
-                                value={apiConfig.method}
-                                onChange={(e) => setApiConfig({ ...apiConfig, method: e.target.value })}
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                            >
-                                <option value="POST">POST</option>
-                                <option value="GET">GET</option>
-                                <option value="PUT">PUT</option>
-                                <option value="DELETE">DELETE</option>
-                                <option value="PATCH">PATCH</option>
-                            </select>
-                        </div>
-                    </div>
-                </div> */}
+
 
                 {/* Main Tabs */}
                 <div className="flex border-b border-gray-200 mb-6">
@@ -962,6 +995,65 @@ export const ApiPlaygroundPage = () => {
                         </button>
                     ))}
                 </div>
+
+                {activeTab === 'modelselection' && (
+                    <div className="catalog-grid">
+                        {models.map((model) => (
+                            <div
+                                key={model.id}
+                                className={`model-card ${selectedModelId === model.id ? 'selected' : ''}`}
+                                onClick={() => handleModelSelect(model.id)}
+                            >
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                    <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
+                                        <img src={model.logo} width={20} height={20} alt={model.name} />
+                                        <p className="model-name px-2">{model.name}</p>
+                                    </div>
+                                    <input
+                                        type="radio"
+                                        name="model-selection"
+                                        className="model-radio"
+                                        checked={selectedModelId === model.id}
+                                        onChange={() => handleModelSelect(model.id)}
+                                        onClick={(e) => e.stopPropagation()} // Prevent double triggering
+                                    />
+                                </div>
+
+                                <div className="model-card-header">
+                                    <h3 className="model-name">{model.useCase}</h3>
+                                </div>
+
+                                <p className="model-desc">{model.desc}</p>
+
+                                <div className="model-parameters">
+                                    <div className="parameter-row">
+                                        <div className="parameter">
+                                            <span className="parameter-label">Sector</span>
+                                            <span className="parameter-value">{model.sector}</span>
+                                        </div>
+                                        <div className="parameter">
+                                            <span className="parameter-label">Sub-domain</span>
+                                            <span className="parameter-value">{model.subDomain}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="parameter-row">
+                                        <div className="parameter">
+                                            <span className="parameter-label">Model Type</span>
+                                            <span className="parameter-value">{model.modelType}</span>
+                                        </div>
+                                        <div className="parameter">
+                                            <span className="parameter-label">Max Tokens</span>
+                                            <span className="parameter-value">{model.maxToken}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 {/* Designer Tab */}
                 {activeTab === 'designer' && (

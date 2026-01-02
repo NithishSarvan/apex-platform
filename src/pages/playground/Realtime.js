@@ -89,29 +89,7 @@ const Realtime = () => {
             flexDirection: "column",
           }}
         >
-          {/* ================= HEADER ================= */}
-          {/* <Box
-          sx={{
-            px: 3,
-            py: 2,
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }} >
-          
-            <Box onClick={() => setAiModel(true)} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <img src={gpt} alt="GPT" width={40} />
-              <Typography variant="h6" fontWeight="bold">
-                Realtime
-              </Typography>
-            </Box>
 
-
-          </div>
-        </Box> */}
 
 
 
@@ -342,22 +320,15 @@ const Realtime = () => {
 
           {/* ================= CENTER ================= */}
           <Box
-            // sx={{
-            //   flex: 1,
-            //   display: "flex",
-            //   flexDirection: "column",
-            //   alignItems: "center",
-            //   justifyContent: "center",
-            //   gap: 2,
-            // }}
+
             className="realtime-subscription"
           >
-            <img src={dataset} />
+            {/* <img src={dataset} />
             <Typography variant="h6" fontWeight="500">
               Subscription
             </Typography>
             <p style={{ width: "40%", fontSize: "14px", textAlign: "center", color: "gray", marginBottom: "10px", paddingBottom: '10px', paddingTop: '10px' }} >Please contact our support team to activate your subscription or get assistance, or click "Contact Us" below.</p>
-            <button className="check-btn flex gap-2 items-center py-2"><LuHeadset />Contact Us</button>
+            <button className="check-btn flex gap-2 items-center py-2"><LuHeadset />Contact Us</button> */}
           </Box>
 
           {/* ================= BOTTOM INPUT ================= */}

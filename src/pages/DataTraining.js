@@ -164,12 +164,22 @@ const DataTraining = ({ data, onUpdate }) => {
                                             />
                                         </div>
 
-                                        <button
-                                            onClick={handleAddQA}
-                                            className="check-btn flex items-center gap-2"
-                                        >
-                                            <FiPlus /> Add Q&A Pair
-                                        </button>
+                                        <div className='flex gap-2'>
+                                            <button
+                                                onClick={handleAddQA}
+                                                className="check-btn flex items-center gap-2"
+                                            >
+                                                Add Q&A Pair
+                                            </button>
+
+                                            <button
+
+                                                className="try-btn  flex items-center gap-2"
+                                            >
+                                                Upload Q&A Pair
+                                            </button>
+                                        </div>
+
                                     </div>
                                 </div>
 

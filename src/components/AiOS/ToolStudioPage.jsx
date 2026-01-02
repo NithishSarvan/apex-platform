@@ -39,25 +39,12 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
             parameters: [{ name: 'policy_number', type: 'string', required: true }],
             category: 'policy',
             status: 'active',
-            createdAt: '2024-01-15'
+            createdAt: '2024-01-15',
+            dataSOurce: 'Policy Database'
         },
+
         {
             id: 2,
-            name: 'calculate_premium',
-            description: 'Calculate insurance premium based on coverage',
-            type: 'function',
-            code: 'function calculatePremium(age, coverageAmount, term) { /* logic */ }',
-            parameters: [
-                { name: 'age', type: 'number', required: true },
-                { name: 'coverageAmount', type: 'number', required: true },
-                { name: 'term', type: 'number', required: false }
-            ],
-            category: 'calculation',
-            status: 'active',
-            createdAt: '2024-01-10'
-        },
-        {
-            id: 3,
             name: 'customer_lookup_api',
             description: 'Fetch customer details from CRM API',
             type: 'api',
@@ -83,6 +70,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
         code: '',
         parameters: [{ id: Date.now(), name: '', type: 'string', required: true, description: '' }],
         category: '',
+        availableDb: '',
         tags: []
     });
     const [testInputs, setTestInputs] = useState({});
@@ -122,19 +110,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                 ],
                 category: 'claims'
             },
-            {
-                name: 'premium_calculator',
-                displayName: 'Premium Calculator',
-                description: 'Calculate insurance premium based on risk factors',
-                type: 'function',
-                code: 'function calculatePremium(age, coverage, location) {\n  let baseRate = 1000;\n  // Premium calculation logic\n  return baseRate * riskFactor;\n}',
-                parameters: [
-                    { name: 'age', type: 'number', required: true },
-                    { name: 'coverage_amount', type: 'number', required: true },
-                    { name: 'location', type: 'string', required: false }
-                ],
-                category: 'calculation'
-            }
+
         ],
         Banking: [
             {
@@ -401,136 +377,21 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                         onScroll={handleScroll}
                         className="flex-1 overflow-y-auto overflow-x-auto hide-scrollbar"
                     >
-                        {/* ================= Purpose & Overview ================= */}
-                        {/* <div ref={(el) => (sectionRefs.current['Purpose & Overview'] = el)} className="bg-white my-4 p-6 rounded-lg border border-gray-200">
-                            <div className="flex justify-between items-center mb-6">
-                                <div>
-                                    <h4 className="font-semibold text-lg flex items-center gap-2">
-                                        <FiInfo className="text-[#02b499]" />
-                                        Purpose & Overview
-                                    </h4>
-                                    <p className="text-sm text-gray-600">Understand how AI tools work and their applications</p>
-                                </div>
-                            </div>
 
-                            <div className="space-y-6">
-                                <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-                                    <div className="flex items-start gap-3">
-                                        <AiOutlineQuestionCircle className="text-blue-500 text-xl mt-1" />
-                                        <div>
-                                            <h5 className="font-semibold text-blue-800 mb-2">What are AI Tools?</h5>
-                                            <p className="text-blue-700 text-sm">
-
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="border border-gray-200 rounded-lg p-4">
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <div className="w-8 h-8 bg-[#02b499]/10 rounded-full flex items-center justify-center">
-                                                <FiDatabase className="text-[#02b499]" />
-                                            </div>
-                                            <h6 className="font-semibold">SQL Tools</h6>
-                                        </div>
-                                        <p className="text-sm text-gray-600">
-                                            Execute database queries to fetch or update data. Use variables for dynamic parameters.
-                                        </p>
-                                    </div>
-
-                                    <div className="border border-gray-200 rounded-lg p-4">
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <div className="w-8 h-8 bg-[#02b499]/10 rounded-full flex items-center justify-center">
-                                                <AiOutlineApi className="text-[#02b499]" />
-                                            </div>
-                                            <h6 className="font-semibold">API Tools</h6>
-                                        </div>
-                                        <p className="text-sm text-gray-600">
-                                            Make HTTP requests to external APIs. Define endpoints, methods, and authentication.
-                                        </p>
-                                    </div>
-
-                                    <div className="border border-gray-200 rounded-lg p-4">
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <div className="w-8 h-8 bg-[#02b499]/10 rounded-full flex items-center justify-center">
-                                                <FiCode className="text-[#02b499]" />
-                                            </div>
-                                            <h6 className="font-semibold">Function Tools</h6>
-                                        </div>
-                                        <p className="text-sm text-gray-600">
-                                            Write custom JavaScript functions for calculations, transformations, or business logic.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="border border-gray-200 rounded-lg p-4">
-                                    <h6 className="font-semibold mb-3">How Tools Work</h6>
-                                    <div className="space-y-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                                                <FiCheck className="text-green-600" />
-                                            </div>
-                                            <span className="text-sm">AI assistant detects when a tool is needed based on user query</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                                                <FiCheck className="text-green-600" />
-                                            </div>
-                                            <span className="text-sm">Tool parameters are extracted from conversation context</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                                                <FiCheck className="text-green-600" />
-                                            </div>
-                                            <span className="text-sm">Tool executes with provided parameters</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                                                <FiCheck className="text-green-600" />
-                                            </div>
-                                            <span className="text-sm">Results are formatted and returned to user</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <h6 className="font-semibold mb-2">Best Practices</h6>
-                                    <ul className="text-sm text-gray-600 space-y-2">
-                                        <li className="flex items-start gap-2">
-                                            <FiCheck className="text-green-500 mt-0.5" />
-                                            Give tools descriptive names that indicate their purpose
-                                        </li>
-                                        <li className="flex items-start gap-2">
-                                            <FiCheck className="text-green-500 mt-0.5" />
-                                            Include clear parameter descriptions and examples
-                                        </li>
-                                        <li className="flex items-start gap-2">
-                                            <FiCheck className="text-green-500 mt-0.5" />
-                                            Test tools thoroughly with different input scenarios
-                                        </li>
-                                        <li className="flex items-start gap-2">
-                                            <FiCheck className="text-green-500 mt-0.5" />
-                                            Document any prerequisites or setup requirements
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div> */}
 
                         {/* ================= Tool Gallery ================= */}
                         <div ref={(el) => (sectionRefs.current['Tool Gallery'] = el)} className="bg-white my-4 p-6 rounded-lg border border-gray-200">
                             <div className="flex justify-between items-center mb-6">
                                 <div>
-                                    <h4 className="font-semibold text-lg">Tool Gallery ({tools.length})</h4>
-                                    <p className="text-sm text-gray-600">Browse and manage your AI tools</p>
+                                    <h4 className="font-semibold text-lg">Data Model Gallery ({tools.length})</h4>
+                                    <p className="text-sm text-gray-600">Browse and manage your AI model</p>
                                 </div>
                                 <div className="flex gap-2">
                                     <div className="relative">
                                         <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                         <input
                                             type="text"
-                                            placeholder="Search tools..."
+                                            placeholder="Search data models..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
@@ -540,7 +401,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                         className="check-btn flex items-center gap-2"
                                         onClick={() => setShowCreateModal(true)}
                                     >
-                                        <FiPlus /> Create Tool
+                                        <FiPlus />Create Data Model
                                     </button>
                                 </div>
                             </div>
@@ -619,7 +480,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                         className="check-btn flex items-center gap-2 mx-auto"
                                         onClick={() => setShowCreateModal(true)}
                                     >
-                                        <FiPlus /> Create First Tool
+                                        <FiPlus /> Create First Data Model
                                     </button>
                                 </div>
                             )}
@@ -631,7 +492,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
              flex justify-center z-50 p-4">
                                 <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
                                     <div className="flex justify-between items-center mb-6">
-                                        <h3 className="font-semibold text-lg">Create New AI Tool</h3>
+                                        <h3 className="font-semibold text-lg">Create Data Model</h3>
                                         <button
                                             onClick={() => {
                                                 setShowCreateModal(false);
@@ -647,7 +508,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                         {/* Tool Basic Info */}
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <label className="label block mb-2 font-medium text-gray-700">Tool Name *</label>
+                                                <label className="label block mb-2 font-medium text-gray-700">Data Model Name *</label>
                                                 <input
                                                     type="text"
                                                     value={newTool.name}
@@ -660,7 +521,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                                 </p>
                                             </div>
                                             <div>
-                                                <label className="label block mb-2 font-medium text-gray-700">Tool Type *</label>
+                                                <label className="label block mb-2 font-medium text-gray-700">Connection Type *</label>
                                                 <select
                                                     value={newTool.type}
                                                     onChange={(e) => setNewTool({ ...newTool, type: e.target.value })}
@@ -668,7 +529,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                                 >
                                                     <option value="sql">SQL Query</option>
                                                     <option value="api">API Call</option>
-                                                    <option value="function">JavaScript Function</option>
+
                                                 </select>
                                             </div>
                                         </div>
@@ -684,8 +545,28 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                             />
                                         </div>
 
+                                        {newTool.type === 'sql' && (
+
+                                            <div>
+                                                <label className="label block mb-2 font-medium text-gray-700">Available datasource*</label>
+                                                <select
+                                                    value={newTool.availableDb}
+                                                    onChange={(e) => setNewTool({ ...newTool, availableDb: e.target.value })}
+                                                    className="w-full mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#02b499] focus:border-transparent"
+                                                >
+                                                    <option value="">Select Database</option>
+                                                    <option value="policyDB">Policy Database</option>
+                                                    <option value="claimsDB">Claims Database</option>
+                                                    <option value="CUstomerDB">Customer Database</option>
+
+                                                </select>
+                                            </div>
+                                        )}
 
                                         {newTool.type === 'sql' && (
+
+
+
                                             <div>
                                                 <label className="label block mb-2 font-medium text-gray-700">SQL Query *</label>
                                                 <div className="bg-gray-50 border border-gray-300 rounded-lg p-3 mb-2">
@@ -701,6 +582,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                                     />
                                                 </div>
                                             </div>
+
                                         )}
 
                                         {newTool.type === 'api' && (
@@ -830,17 +712,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                             </div>
                                         </div>
 
-                                        {/* Category */}
-                                        <div>
-                                            <label className="label block mb-2 font-medium text-gray-700">Category</label>
-                                            <input
-                                                type="text"
-                                                value={newTool.category}
-                                                onChange={(e) => setNewTool({ ...newTool, category: e.target.value })}
-                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#02b499] focus:border-transparent"
-                                                placeholder="e.g., policy, calculation, customer"
-                                            />
-                                        </div>
+
 
                                         {/* Action Buttons */}
                                         <div className="flex justify-end gap-3 pt-4 border-t">
@@ -859,7 +731,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                                 onClick={handleCreateTool}
                                                 className="check-btn px-4 py-2"
                                             >
-                                                Create Tool
+                                                Create
                                             </button>
                                         </div>
                                     </div>
@@ -871,15 +743,15 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                         <div ref={(el) => (sectionRefs.current['Tool Testing'] = el)} className="bg-white my-4 p-6 rounded-lg border border-gray-200">
                             <div className="flex justify-between items-center mb-6">
                                 <div>
-                                    <h4 className="font-semibold text-lg">Tool Testing</h4>
-                                    <p className="text-sm text-gray-600">Test and validate your tools before deployment</p>
+                                    <h4 className="font-semibold text-lg">Testing</h4>
+                                    <p className="text-sm text-gray-600">Test and validate before deployment</p>
                                 </div>
                                 {selectedTool && (
                                     <button
                                         className="check-btn flex items-center gap-2"
                                         onClick={() => setShowTestModal(true)}
                                     >
-                                        <FiPlay /> Test Selected Tool
+                                        <FiPlay /> Test selected data model
                                     </button>
                                 )}
                             </div>
@@ -893,6 +765,15 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                                 <div>
                                                     <h5 className="font-semibold">{selectedTool.name}</h5>
                                                     <p className="text-sm text-gray-600">{selectedTool.description}</p>
+                                                    {selectedTool.type === 'sql' && (
+                                                        <div className="flex items-center">
+                                                            <span className="text-sm font-semibold text-gray-900 mr-2">Datasource:</span>
+                                                            <span className="text-sm text-gray-700 bg-gray-100 px-3 py-1 rounded-md">
+                                                                {selectedTool.dataSOurce}
+                                                            </span>
+                                                        </div>
+                                                    )}
+
                                                 </div>
                                             </div>
                                             <div className="flex gap-2">
@@ -908,7 +789,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
              flex justify-center z-50 p-4">
                                                 <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                                                     <div className="flex justify-between items-center mb-6">
-                                                        <h3 className="font-semibold text-lg">Test Tool: {selectedTool.name}</h3>
+                                                        <h3 className="font-semibold text-lg">Test Data Model: {selectedTool.name}</h3>
                                                         <button
                                                             onClick={() => {
                                                                 setShowTestModal(false);
@@ -956,7 +837,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                                                 onClick={handleTestTool}
                                                                 className="check-btn w-full flex items-center justify-center gap-2 py-3"
                                                             >
-                                                                <FiPlay /> Execute Tool
+                                                                <FiPlay /> Execute Model
                                                             </button>
                                                         </div>
 
@@ -1005,7 +886,7 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                                     </div>
 
                                     <div>
-                                        <h5 className="font-semibold mb-4">Tool Details</h5>
+                                        <h5 className="font-semibold mb-4">Data Model Details</h5>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <h6 className="font-medium mb-2">Parameters</h6>
@@ -1041,8 +922,8 @@ export const ToolStudioPage = ({ industry = 'Insurance' }) => {
                             ) : (
                                 <div className="text-center py-12">
                                     <FiPlay className="mx-auto text-4xl text-gray-400 mb-4" />
-                                    <h4 className="font-semibold text-gray-700 mb-2">No Tool Selected</h4>
-                                    <p className="text-gray-500">Select a tool from the gallery to test it</p>
+                                    <h4 className="font-semibold text-gray-700 mb-2">No Data Model Selected</h4>
+                                    <p className="text-gray-500">Select a data model from the gallery to test it</p>
                                 </div>
                             )}
                         </div>

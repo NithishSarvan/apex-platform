@@ -39,14 +39,7 @@ const AVAILABLE_TOOLS = [
         type: 'sql',
         category: 'policy'
     },
-    {
-        id: 'tool_2',
-        name: 'calculate_premium',
-        displayName: 'Calculate Premium',
-        description: 'Calculate insurance premium based on coverage',
-        type: 'function',
-        category: 'calculation'
-    },
+
     {
         id: 'tool_3',
         name: 'customer_lookup_api',
@@ -655,7 +648,7 @@ export const IntentRegistryPage = ({ domain = 'insurance', availableTools = AVAI
                                         onClick={() => setShowLinkToolModal(true)}
                                         className="check-btn flex items-center gap-2"
                                     >
-                                        <FiLink /> Link New Tool
+                                        <FiLink /> Link New Data Model
                                     </button>
                                 </div>
 
@@ -939,7 +932,7 @@ export const IntentRegistryPage = ({ domain = 'insurance', availableTools = AVAI
                             <div className="fixed inset-x-0 top-[64px] bottom-0 bg-black bg-opacity-50 flex justify-center z-50 p-4">
                                 <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
                                     <div className="flex justify-between items-center mb-6">
-                                        <h3 className="font-semibold text-lg">Link Tool to Intent: {activeIntent?.name}</h3>
+                                        <h3 className="font-semibold text-lg">Link Data Model to Intent: {activeIntent?.name}</h3>
                                         <button
                                             onClick={() => setShowLinkToolModal(false)}
                                             className="text-gray-500 hover:text-gray-700"
@@ -1003,7 +996,7 @@ export const IntentRegistryPage = ({ domain = 'insurance', availableTools = AVAI
                                                                             <span>ID: {tool.name}</span>
                                                                         </div>
                                                                         <button className="check-btn text-sm px-3 py-1">
-                                                                            Link Tool
+                                                                            Link Data Model
                                                                         </button>
                                                                     </div>
                                                                 </div>

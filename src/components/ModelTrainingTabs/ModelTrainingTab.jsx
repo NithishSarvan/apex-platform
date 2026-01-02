@@ -38,7 +38,8 @@ import {
     Security as SecurityIcon,
     Timeline as TimelineIcon
 } from '@mui/icons-material';
-
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 // TabPanel Component for content switching
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -67,10 +68,13 @@ const TabPanel = (props) => {
 
 const ModelTrainingTab = () => {
     const [value, setValue] = useState(0);
-
+    const navigate = useNavigate();
+    const { state } = useLocation();
+    const { modelName, useCase, sector, subDOmain } = state || {};
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
 
     const [aiModel, setAiModel] = useState(false)
     const providers = [
@@ -89,21 +93,65 @@ const ModelTrainingTab = () => {
 
     const [showWizard, setShowWizard] = useState(false);
 
+
     return (
         <div className='main-content' >
             {/* Header Section */}
-            <div className="flex gap-2 justify-between items-center px-10 pt-4 pb-2">
-                <div>
-                    <h1 className="text-2xl font-bold text-black-500">Model Training</h1>
-                    <p className="text-sm text-gray-600 mt-1">Configure and train your AI model with data, fine-tuning, and rules</p>
-                </div>
+            <div className="px-10 pt-6 pb-4 bg-white border-b border-gray-200">
+                <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                        <div className="flex items-center justify-between mb-3"> {/* Changed from gap-3 to justify-between */}
+                            <div className="flex items-center gap-3"> {/* Added wrapper for left side content */}
+                                <h1 className="text-2xl font-bold text-gray-900">Model Training</h1>
+                                <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                                    {modelName}
+                                </span>
+                            </div>
 
-                {/* <button className="request-model-btn align-right"
-                    // onClick={() => setAiModel(true)}
-                    onClick={() => setShowWizard(true)}
-                >
-                    Configure AI
-                </button> */}
+                            <div className="flex items-center gap-2"> {/* Added wrapper for right side buttons */}
+                                <button
+                                    className="try-btn align-right"
+                                    onClick={() => navigate('/chat', {
+                                        state: {
+                                            modelName: modelName,
+                                        },
+                                    })}
+                                >
+                                    Try it out
+                                </button>
+                                <button className="save-conf-btn align-right">
+                                    Save Configuration
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* <p className="text-sm text-gray-600 mt-1">Configure and train your AI model with data, fine-tuning, and rules</p> */}
+
+                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                            <div className="flex items-center">
+                                <span className="text-sm font-semibold text-gray-900 mr-2">Use Case:</span>
+                                <span className="text-sm text-gray-700 bg-gray-100 px-3 py-1 rounded-md">
+                                    {useCase || "Policy Inquiry & Claims Assistance"}
+                                </span>
+                            </div>
+                            <div className="w-px h-4 bg-gray-300"></div>
+                            <div className="flex items-center">
+                                <span className="text-sm font-semibold text-gray-900 mr-2">Sector:</span>
+                                <span className="text-sm text-gray-700 bg-gray-100 px-3 py-1 rounded-md">
+                                    {sector || "Insurance"}
+                                </span>
+                            </div>
+                            <div className="w-px h-4 bg-gray-300"></div>
+                            <div className="flex items-center">
+                                <span className="text-sm font-semibold text-gray-900 mr-2">Subdomain:</span>
+                                <span className="text-sm text-gray-700 bg-gray-100 px-3 py-1 rounded-md">
+                                    {subDOmain || "General"}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             {/* Horizontal Tabs */}
@@ -160,12 +208,6 @@ const ModelTrainingTab = () => {
                         label="Q&A Training"
                     />
 
-
-                    {/* <Tab
-                        icon={<SchemaIcon size={20} />}
-                        iconPosition="start"
-                        label="Semantic Layer"
-                    /> */}
 
                     <Tab
                         icon={<FiCheck size={20} />}

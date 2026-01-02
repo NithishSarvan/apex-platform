@@ -31,14 +31,15 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
         subDomain: '',
         primaryUseCase: '',
         modelPreference: '',
-        maxToken: '',
-        modelType: '',
+        maxToken: '12678',
+        modelType: 'API',
         industry: '',
         useCase: '',
         dataTypes: [],
         compliance: [],
         teamSize: '',
-        modelPreference: ''
+        modelPreference: '',
+        icon: null
     });
 
     const industries = ['Insurance', 'Banking', 'Healthcare', 'Retail', 'Finance', 'Education', 'Manufacturing', 'Other'];
@@ -46,7 +47,7 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
     const dataTypes = ['Customer Data', 'Financial Records', 'Medical Records', 'Product Catalog', 'Market Data', 'Internal Documents', 'APIs/Webhooks', 'Databases'];
     const complianceFrameworks = ['GDPR', 'HIPAA', 'PCI-DSS', 'FINRA', 'SOC2', 'ISO27001'];
 
-    const steps = ['Use Case Info', 'Business Domain', 'AI Purpose', 'Review'];
+    const steps = ['Use Case Info', 'Model Selection', 'Review'];
 
     const handleNext = () => {
         if (activeStep === steps.length - 1) {
@@ -57,13 +58,10 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
         }
     };
 
-    const handleTapClick = () => {
-        if (activeStep === steps.length - 1) {
-            onComplete(formData);
-            onClose();
-        } else {
-            setActiveStep(activeStep + 1);
-        }
+    const handleTapClick = (step) => {
+
+        setActiveStep(step);
+
     };
 
     const handleBack = () => setActiveStep(activeStep - 1);
@@ -151,6 +149,20 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
         },
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({
+                    ...prev,
+                    icon: reader.result
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const renderStepContent = (step) => {
         switch (step) {
             case 0:
@@ -178,6 +190,45 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
                                 color='#2f2f32'
                                 mb={1}
                             >
+                                Use Case Category
+                            </Typography>
+                            <TextField
+                                select
+                                fullWidth
+                                value={formData.primaryUseCase}
+                                onChange={(e) => setFormData({ ...formData, primaryUseCase: e.target.value })}
+                                sx={{
+                                    ...inputSx,
+                                    "& .MuiSelect-select": {
+                                        display: "flex",
+                                        alignItems: "center",
+                                        height: "44px !important",
+                                    },
+                                }}
+                                SelectProps={{
+                                    displayEmpty: true,
+                                    renderValue: (selected) => {
+                                        if (!selected || selected === "") {
+                                            return <span style={{ color: '#999' }}>Select Use Case Category</span>;
+                                        }
+                                        return selected;
+                                    },
+                                }}
+                            >
+                                <MenuItem value="">Select Use Case Category</MenuItem>
+                                {useCases.map(uc => (
+                                    <MenuItem key={uc} value={uc}>{uc}</MenuItem>
+                                ))}
+                            </TextField>
+                        </Box>
+                        <Box>
+                            <Typography
+                                variant="body2"
+                                fontWeight={450}
+                                fontSize={'15px'}
+                                color='#2f2f32'
+                                mb={1}
+                            >
                                 Description
                             </Typography>
                             <TextField
@@ -192,6 +243,45 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
                                 }
                                 sx={inputTextAreaSx}
                             />
+                        </Box>
+
+                        <Box>
+                            <input
+                                accept="image/*"
+                                type="file"
+                                id="logo-upload"
+                                style={{ display: 'none' }}
+                                onChange={handleFileChange}
+                            />
+                            <label htmlFor="logo-upload">
+                                <Button
+                                    variant="outlined"
+                                    component="span"
+                                    sx={{
+                                        borderColor: '#ddd',
+                                        color: '#2f2f32',
+                                        textTransform: 'none',
+                                        '&:hover': {
+                                            borderColor: '#999',
+                                            backgroundColor: '#f9f9f9'
+                                        }
+                                    }}
+                                >
+                                    Upload Icon
+                                </Button>
+                            </label>
+                            {formData.icon && (
+                                <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <img
+                                        src={formData.icon}
+                                        alt="Preview"
+                                        style={{ width: 60, height: 60, borderRadius: 4, objectFit: 'contain' }}
+                                    />
+                                    <Typography variant="body2" color="text.secondary">
+                                        Icon uploaded
+                                    </Typography>
+                                </Box>
+                            )}
                         </Box>
                     </Box>
                 );
@@ -268,54 +358,6 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
                             />
                         </Box>
 
-                    </Box >
-                );
-
-            case 2:
-                return (
-                    <Box className="space-y-4">
-                        {/* Primary Use Case Field */}
-                        <Box>
-                            <Typography
-                                variant="body2"
-                                fontWeight={450}
-                                fontSize={'15px'}
-                                color='#2f2f32'
-                                mb={1}
-                            >
-                                Primary Use Case
-                            </Typography>
-                            <TextField
-                                select
-                                fullWidth
-                                value={formData.primaryUseCase}
-                                onChange={(e) => setFormData({ ...formData, primaryUseCase: e.target.value })}
-                                sx={{
-                                    ...inputSx,
-                                    "& .MuiSelect-select": {
-                                        display: "flex",
-                                        alignItems: "center",
-                                        height: "44px !important",
-                                    },
-                                }}
-                                SelectProps={{
-                                    displayEmpty: true,
-                                    renderValue: (selected) => {
-                                        if (!selected || selected === "") {
-                                            return <span style={{ color: '#999' }}>Select Primary Use Case</span>;
-                                        }
-                                        return selected;
-                                    },
-                                }}
-                            >
-                                <MenuItem value="">Select Primary Use Case</MenuItem>
-                                {useCases.map(uc => (
-                                    <MenuItem key={uc} value={uc}>{uc}</MenuItem>
-                                ))}
-                            </TextField>
-                        </Box>
-
-                        {/* Model Preference Field */}
                         <Box>
                             <Typography
                                 variant="body2"
@@ -366,60 +408,12 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
                                 <MenuItem value="custom">Custom/Private Model</MenuItem>
                             </TextField>
                         </Box>
-
-                        <Box>
-                            <Typography variant="body2" fontWeight={500} mb={1}>
-                                Max Tokens
-                            </Typography>
-                            <TextField
-                                fullWidth
-                                placeholder="Max Tokens Eg.32781"
-                                value={formData.maxToken}
-                                onChange={(e) => setFormData({ ...formData, maxToken: e.target.value })}
-                                sx={inputSx}
-                            />
-                        </Box>
+                    </Box >
 
 
-                        <Box>
-                            <Typography variant="body2" fontWeight={500} mb={1}>
-                                Model Type
-                            </Typography>
-
-                            <TextField
-                                select
-                                fullWidth
-                                value={formData.modelType}
-                                onChange={(e) => setFormData({ ...formData, modelType: e.target.value })}
-                                sx={{
-                                    ...inputSx,
-                                    "& .MuiSelect-select": {
-                                        display: "flex",
-                                        alignItems: "center",
-                                        height: "44px !important",
-                                    },
-                                }}
-                                SelectProps={{
-                                    displayEmpty: true,
-                                    renderValue: (selected) => {
-                                        if (!selected) {
-                                            return <span style={{ color: '#999' }}>Select Model Type</span>;
-                                        }
-                                        return selected;
-                                    },
-                                }}
-                            >
-                                <MenuItem value="">Select Model Type</MenuItem>
-                                <MenuItem value="API">API Hosted</MenuItem>
-                                <MenuItem value="Self-Hosted">Self Hosted</MenuItem>
-                                <MenuItem value="OpenSource">Open Source</MenuItem>
-                            </TextField>
-                        </Box>
-
-                    </Box>
                 );
 
-            case 3:
+            case 2:
                 return (
                     <Paper className="bg-gray-50" sx={{ p: 2 }}>
                         <Typography variant="h6" sx={{ mb: 2 }}>Configuration Summary</Typography>
@@ -429,6 +423,10 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
                                 <Typography variant="body1" fontWeight="medium">{formData.companyName}</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="body2" color="text.secondary">Use Case Category:</Typography>
+                                <Typography variant="body1" fontWeight="medium">{formData.primaryUseCase}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography variant="body2" color="text.secondary">Sector:</Typography>
                                 <Typography variant="body1" fontWeight="medium">{formData.sector}</Typography>
                             </Box>
@@ -436,38 +434,26 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
                                 <Typography variant="body2" color="text.secondary">Sub Domain:</Typography>
                                 <Typography variant="body1" fontWeight="medium">{formData.subDomain}</Typography>
                             </Box>
+
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography variant="body2" color="text.secondary">Primary Use Case:</Typography>
-                                <Typography variant="body1" fontWeight="medium">{formData.primaryUseCase}</Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography variant="body2" color="text.secondary">Model:</Typography>
+                                <Typography variant="body2" color="text.secondary">Model Preference:</Typography>
                                 <Typography variant="body1" fontWeight="medium">{formData.modelPreference}</Typography>
                             </Box>
+
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography variant="body2" color="text.secondary">Model Max Token:</Typography>
-                                <Typography variant="body1" fontWeight="medium">{formData.maxToken}</Typography>
+                                <Typography variant="body2" color="text.secondary">Icon:</Typography>
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography variant="body2" color="text.secondary">Model Type:</Typography>
-                                <Typography variant="body1" fontWeight="medium">{formData.modelType}</Typography>
-                            </Box>
-                            {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <Typography variant="body2" color="text.secondary">Data Types:</Typography>
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, maxWidth: '60%' }}>
-                                    {formData.dataTypes.map(type => (
-                                        <Chip key={type} label={type} size="small" />
-                                    ))}
+                            {formData.icon && (
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <img
+                                        src={formData.icon}
+                                        alt="Preview"
+                                        style={{ width: 60, height: 60, borderRadius: 4, objectFit: 'contain' }}
+                                    />
+
                                 </Box>
-                            </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <Typography variant="body2" color="text.secondary">Compliance:</Typography>
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, maxWidth: '60%' }}>
-                                    {formData.compliance.map(fw => (
-                                        <Chip key={fw} label={fw} size="small" color="primary" />
-                                    ))}
-                                </Box>
-                            </Box> */}
+                            )}
+
                         </Box>
                     </Paper>
                 );
@@ -487,7 +473,7 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
             {/* Header */}
             <DialogTitle>
                 <Typography variant="h6" fontWeight="bold">
-                    Configure Your AI Agent
+                    Configure setup for model training
                 </Typography>
             </DialogTitle>
 
@@ -503,12 +489,19 @@ const OnboardingWizardDialog = ({ open, onClose, onComplete }) => {
                         {steps.map((label, index) => (
                             <Box
                                 key={label}
+                                onClick={() => handleTapClick(index)}
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
                                     mb: 2,
+                                    cursor: "pointer",
                                     color: activeStep === index ? "#00bfa5" : "#666",
                                     fontWeight: activeStep === index ? "bold" : "normal",
+                                    "&:hover": {
+                                        color: "#00bfa5",
+                                        borderRadius: "6px",
+                                    },
+
                                 }}
                             >
                                 <Typography sx={{ width: 30, fontWeight: 'bold' }}>

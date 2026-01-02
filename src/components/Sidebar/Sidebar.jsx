@@ -69,6 +69,7 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
         {
             icon: <FiGrid />,
             label: 'Platform',
+            noBorderTop: true,
             children: [
                 { icon: <TbListDetails />, label: 'Overview', path: '/' },
                 { icon: <BiCollapse />, label: 'Providers', path: '/providers' },
@@ -88,7 +89,7 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
         },
         {
             icon: <FiTarget />,
-            label: 'Onboarding',
+            label: 'Subscription',
             // path: '/onboarding',
             children: [
                 { label: 'Client Management', path: '/client-mang' },
@@ -96,7 +97,7 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                 { label: 'Usage Report', path: '/utilization-report' },
                 { label: 'Billing Summary', path: '/billing-management' },
             ],
-            noBorderTop: true
+
         },
         {
             icon: <FiBriefcase />,

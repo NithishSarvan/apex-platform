@@ -109,7 +109,6 @@ const ModelDetails = () => {
                             <button className="try-btn" onClick={() => navigate('/chat', {
                                 state: {
                                     modelName: modelName,
-
                                 },
                             })}>Try it out</button>
                         </div>
