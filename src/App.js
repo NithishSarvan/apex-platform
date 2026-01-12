@@ -15,8 +15,7 @@ import Chate from './pages/playground/Chate';
 import Realtime from './pages/playground/Realtime';
 import SettingsTabs from './pages/SettingsTabs';
 import ModelTrainingTab from './components/ModelTrainingTabs/ModelTrainingTab';
-import AIOperatingSystemDashboard from './pages/newflow/AIOperatingSystemDashboard';
-import AIOSEnterpriseDashboard from './pages/newflow/AIOperatingSystemDashboard';
+
 import ModelTrainingList from './components/ModelTrainingTabs/ModelTrainingList';
 import { ApiPlaygroundPage } from './pages/playground/ApiPlayground';
 import PredefinedWorkflows from './components/Accelerators/PredefinedWorkflows';
@@ -76,7 +75,7 @@ function App() {
             <Route path="/data-sources" element={<DataSources />} />
             <Route path="/rules-setup" element={<RulesSetupStep />} />
             <Route path="/model-details" element={<ModelDetails />} />
-            <Route path="/aios" element={<AIOperatingSystemDashboard />} />
+
             <Route path="/model-training" element={<ModelTrainingList />} />
             <Route path="/api-playground" element={<ApiPlaygroundPage />} />
             <Route path="/predefined-workflow" element={<PredefinedWorkflows />} />

@@ -238,9 +238,6 @@ const ModelTrainingTab = () => {
                 <TabPanel value={value} index={2}>
                     <DataTraining />
                 </TabPanel>
-                {/* <TabPanel value={value} index={2}>
-                    <SemanticDataLayerPage />
-                </TabPanel> */}
                 <TabPanel value={value} index={3}>
                     <RulesSetupStep />
                 </TabPanel>
