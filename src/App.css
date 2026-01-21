@@ -2,16 +2,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
-
 
 /* body {
   font-family: -apple-system, Roboto, system-ui, sans-serif;
   background: #ffffff;
 
 } */
-
 
 .app {
   min-height: 100vh;
@@ -100,7 +97,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
 }
 
 .menu-btn,
@@ -114,9 +110,7 @@
   border: none;
   cursor: pointer;
   font-size: 16px;
-
 }
-
 
 .menu-btn:hover,
 .doc-btn:hover,
@@ -126,7 +120,6 @@
   border-radius: 6px;
   /* color: #000; */
 }
-
 
 .workspace-item {
   text-align: center;
@@ -181,8 +174,8 @@
 
 /* Main Container */
 .main-container {
-  display: flex;
-  flex: 1;
+  /* display: flex;
+  flex: 1; */
 }
 
 /* Sidebar Styles */
@@ -191,10 +184,12 @@
   background: rgb(244, 245, 246);
   border-right: 1px solid #e0e0e0;
   overflow-y: auto;
-  position: sticky;
-  top: 57px;
+  /* position: sticky; */
+  position: fixed;
+  z-index: 99;
+  top: 64px;
   font-weight: 700;
-  height: calc(100vh - 57px);
+  height: calc(100vh - 64px);
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -261,7 +256,7 @@
 }
 
 /* Also remove from first regular nav-item if needed */
-.menu-list>li:first-child .nav-item {
+.menu-list > li:first-child .nav-item {
   border-top: none !important;
 }
 
@@ -358,7 +353,7 @@
   transition: left 0.3s ease;
 }
 
-.sidebar.collapsed~.help-button {
+.sidebar.collapsed ~ .help-button {
   left: 20px;
 }
 
@@ -369,7 +364,7 @@
 }
 
 /* Adjust help button position when sidebar is collapsed */
-.sidebar.collapsed+.main-content .help-button {
+.sidebar.collapsed + .main-content .help-button {
   left: 20px;
 }
 
@@ -407,19 +402,29 @@
   /* flex: 1;
   padding: 40px;
   overflow-y: auto; */
-  margin-right: auto;
-  margin-left: auto;
+  /* margin-right: auto;
+  margin-left: 300px; */
+
+  padding: 20px 30px;
   /* padding: 43px; */
   margin-top: 20px;
   background-color: #ffffff;
   margin-bottom: 20px;
   /* overflow-y: auto; */
-  width: 950px;
-  max-width: 950px;
+  /* width: 950px;
+  max-width: 950px; */
   height: auto;
   /* default */
   overflow: visible;
-
+  transition: all 0.3s;
+}
+@media (min-width: 1200px) {
+  .main-content {
+    margin-left: 300px;
+  }
+  body.sidebar-collapsed .main-content {
+    margin-left: 80px;
+  }
 }
 
 .main-content-chat {
@@ -451,10 +456,10 @@
   padding-right: 0 !important;
 }
 
-
 /* Hero Section */
 .hero-section {
   display: flex;
+  height: 300px;
 }
 
 .hero-content {
@@ -506,8 +511,6 @@
 
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   position: relative;
-
-
 }
 
 /* .hero-card .slick-dots {
@@ -548,7 +551,7 @@
 }
 
 .hero-card .slick-dots li button:before {
-  content: '';
+  content: "";
   display: none;
   /* Hide the default content */
 }
@@ -567,7 +570,6 @@
   opacity: 0.8;
 }
 
-
 .card-icon {
   font-size: 48px;
   margin-bottom: 16px;
@@ -585,7 +587,6 @@
   /* color: #555; */
   font-weight: 500;
   margin-bottom: 24px;
-
 }
 
 .check-btn {
@@ -598,7 +599,6 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.3s;
-
 }
 
 .try-btn {
@@ -613,7 +613,6 @@
   cursor: pointer;
   transition: background 0.3s;
 }
-
 
 .save-conf-btn {
   background: #02b499;
@@ -813,7 +812,6 @@
   font-weight: bold;
 }
 
-
 /* Custom radio button styling */
 .model-radio {
   cursor: pointer;
@@ -850,7 +848,6 @@
   text-overflow: ellipsis;
   color: #000000;
 }
-
 
 .model-icon {
   font-size: 32px;
@@ -1024,9 +1021,12 @@
   cursor: pointer;
 }
 
-
-
-
+@media (max-width: 1199px) {
+  body.sidebar-collapsed .main-content {
+    padding: 20px;
+    margin-left: 70px;
+  }
+}
 @media (max-width: 1200px) {
   .catalog-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1034,6 +1034,7 @@
 
   .hero-section {
     flex-direction: column;
+    height: auto;
   }
 
   .hero-card {
@@ -1041,6 +1042,29 @@
   }
 }
 
+@media (max-width: 767px) {
+  .card-container {
+    width: 100% !important;
+    padding: 20px !important;
+  }
+  .overview {
+    flex-direction: column;
+  }
+  .hero-content {
+    padding: 24px;
+  }
+  .doc-btn,
+  .workspace-btn,
+  .user-menu {
+    padding: 6px 8px;
+  }
+  .doc-btn svg:last-child{
+    display: none;
+  }
+  .header-right .MuiTypography-root.MuiTypography-p{
+    display: none;
+  }
+}
 @media (max-width: 768px) {
   .catalog-grid {
     grid-template-columns: 1fr;
@@ -1055,9 +1079,6 @@
   }
 }
 
-
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -1069,30 +1090,29 @@
   }
 
   html {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
   }
-
 }
 
 .text-lg {
   font-size: 18px;
 }
 
-
 .card-container {
+  flex: 1;
   background: white;
+  width: 480px;
   /* border-radius: 12px; */
   padding: 40px;
-  max-width: 500px;
+  /* max-width: 500px; */
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
   /* border: 1px solid #d0d7df; */
-
 }
 
 .card-head-title {
   display: flex;
   align-items: center;
-  gap: 20px
+  gap: 20px;
 }
 
 .card-icon-wrapper {
@@ -1139,7 +1159,7 @@
   font-size: 15px;
   line-height: 1.6;
   font-weight: 500;
-  color: #1B1B19;
+  color: #1b1b19;
   margin-bottom: 28px;
 }
 
@@ -1167,7 +1187,7 @@
 
 .overview {
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
   /* gap: 20px; */
   /* margin-bottom: 20px; */
 }
@@ -1198,7 +1218,6 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 
 /* 
 -------------------------------------------------------------------------------------------------- */
@@ -1429,7 +1448,6 @@
 
 button :hover {
   background-color: #e8f5f3;
-
 }
 
 .status-active {
@@ -1620,13 +1638,12 @@ button :hover {
   border-right: 1px solid rgb(221, 221, 221);
   gap: 16px;
   padding: 24px 40px;
-  background-color: #F4F5F6;
+  background-color: #f4f5f6;
   min-height: 400px;
   min-width: 250px;
   display: flex;
   flex-direction: column;
 }
-
 
 .realtime-input-box {
   margin-left: auto;
@@ -1646,7 +1663,7 @@ button :hover {
   border-width: 1px;
   border-style: solid;
   border-image: initial;
-  border-color: #D0D7DF;
+  border-color: #d0d7df;
   padding-left: calc(2 * var(8px));
   padding-right: calc(2 * var(8px));
 }
@@ -1695,7 +1712,6 @@ button :hover {
   max-width: 700px;
 }
 
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1709,10 +1725,7 @@ button :hover {
   z-index: 2000;
   max-height: 90vh;
   overflow-y: auto;
-
 }
-
-
 
 /* .modal-content {
   width: 100%;
@@ -1746,7 +1759,7 @@ button :hover {
 }
 
 .checkbox input[type="checkbox"]:checked::after {
-  content: '✓';
+  content: "✓";
   position: absolute;
   color: white;
   font-size: 12px;
@@ -1760,8 +1773,6 @@ button :hover {
   outline: none;
   box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
 }
-
-
 
 .custom-checkbox {
   width: 16px;
@@ -1781,7 +1792,7 @@ button :hover {
 }
 
 .custom-checkbox:checked::after {
-  content: '✓';
+  content: "✓";
   position: absolute;
   color: white;
   font-size: 12px;

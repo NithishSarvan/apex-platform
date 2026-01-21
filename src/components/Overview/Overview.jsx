@@ -30,7 +30,7 @@ const Overview = () => {
     return (
         <div className="main-content" >
 
-            <div className="hero-section" style={{ height: '300px' }}>
+            <div className="hero-section" >
 
                 <div className="hero-content">
                     <h1>Start Your AI Journey</h1>
@@ -70,7 +70,7 @@ const Overview = () => {
             </div>
 
             <div className='overview'>
-                <div className="card-container" style={{ border: "1px solid #d0d7df ", width: '480px' }} >
+                <div className="card-container" style={{ border: "1px solid #d0d7df "}} >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
                             <FiDatabase size={30} />
@@ -88,7 +88,7 @@ const Overview = () => {
                     <button className="card-button" onClick={() => navigate('/chat')}>Try Playground</button>
                 </div>
 
-                <div className="card-container" style={{ border: "1px solid #d0d7df  ", width: '480px' }} >
+                <div className="card-container" style={{ border: "1px solid #d0d7df  "}} >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
                             <FiSliders size={30} />
@@ -105,7 +105,7 @@ const Overview = () => {
                 </div>
             </div>
             <div className='overview'>
-                <div className="card-container" style={{ border: "1px solid #d0d7df  ", width: '480px' }}
+                <div className="card-container" style={{ border: "1px solid #d0d7df  "}}
                 >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
@@ -121,7 +121,7 @@ const Overview = () => {
                     <button className="card-button" onClick={() => navigate('/data-training')}>Explore</button>
                 </div>
 
-                <div className="card-container" style={{ border: "1px solid #d0d7df  ", width: '480px' }} >
+                <div className="card-container" style={{ border: "1px solid #d0d7df  "}} >
                     <div className='card-head-title' >
                         <div className="card-icon-wrapper mb-3">
                             <FiDatabase size={30} />

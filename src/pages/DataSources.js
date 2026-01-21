@@ -190,15 +190,14 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid  gap-6 grid-cols-1 lg:grid-cols-2">
                 {/* Source List */}
                 <div>
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex lg:flex-row flex-col justify-between lg:items-center items-start gap-2 mb-4">
                         <h4 className="font-semibold">Connected Sources ({sources.length})</h4>
                         <button
                             onClick={() => setShowAddModal(true)}
-                            className="check-btn flex items-center gap-2 "
-                        >
+                            className="check-btn flex items-center gap-2 ">
                             <FiPlus /> Add Source
                         </button>
                     </div>
