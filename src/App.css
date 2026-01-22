@@ -433,8 +433,8 @@
   overflow-y: auto; */
 
   /* overflow-y: auto; */
-  width: 80%;
-  max-width: 80%;
+  /* width: 80%;
+  max-width: 80%; */
   position: relative;
 }
 
@@ -1024,7 +1024,11 @@
 @media (max-width: 1199px) {
   body.sidebar-collapsed .main-content {
     padding: 20px;
-    margin-left: 70px;
+    margin-left: 0px;
+  }
+   .main-content {
+    padding: 20px;
+    margin-left: 0px;
   }
 }
 @media (max-width: 1200px) {
