@@ -83,11 +83,11 @@ const ModelDetails = () => {
     });
 
     return (
-        <div className="main-content-model flex  gap-16 px-10   ">
+        <div className="flex gap-16 px-10 main-content main-content-model ">
 
 
             <div className='flex flex-col h-screen overflow-hidden' >
-                <div className="flex gap-2 items-center ">
+                <div className="flex items-center gap-2 ">
                     <div className="card-icon-wrapper ">
                         {/* <AiFillStar size={30} /> */}
                         <img
@@ -104,7 +104,7 @@ const ModelDetails = () => {
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-black-500">{modelName}</h1>
-                        <div className="flex space-x-3 mt-1">
+                        <div className="flex mt-1 space-x-3">
 
                             <button className="try-btn" onClick={() => navigate('/chat', {
                                 state: {
@@ -114,20 +114,20 @@ const ModelDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div className='heighligts my-4  font-md' >
+                <div className='my-4 heighligts font-md' >
                     <p>The model details below will update automatically based on the Region, Compute, and Version filters you select.</p>
                 </div>
 
-                <div className="flex flex-1  overflow-hidden">
+                <div className="flex flex-1 overflow-hidden">
                     <div
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
-                        className="flex-1 overflow-y-auto overflow-x-auto  hide-scrollbar"
+                        className="flex-1 overflow-x-auto overflow-y-auto hide-scrollbar"
                     >
                         {/* ================= Overview ================= */}
                         <div ref={(el) => (sectionRefs.current['overview'] = el)}>
-                            <h2 className="text-xl font-bold mb-6">Overview</h2>
-                            <p className=" mb-6 font-md" >{overview}</p>
+                            <h2 className="mb-6 text-xl font-bold">Overview</h2>
+                            <p className="mb-6 font-md" >{overview}</p>
 
 
                         </div>
@@ -136,7 +136,7 @@ const ModelDetails = () => {
                             ref={(el) => (sectionRefs.current['configuration'] = el)}
                             className="mb-8"
                         >
-                            <h2 className="text-xl font-bold mb-8">Configuration</h2>
+                            <h2 className="mb-8 text-xl font-bold">Configuration</h2>
                             <div className="mb-6">
                                 <p className="font-md">
                                     Configure the technical specifications and capabilities of your AI model.
@@ -176,7 +176,7 @@ const ModelDetails = () => {
                                                     }
                         `}>
                                                     {config.inputModalities.includes(modality.toLowerCase()) && (
-                                                        <span className="text-white text-xs">✓</span>
+                                                        <span className="text-xs text-white">✓</span>
                                                     )}
                                                 </div>
                                                 <span className="font-medium">{modality}</span>
@@ -214,7 +214,7 @@ const ModelDetails = () => {
                                                     }
                         `}>
                                                     {config.outputModalities.includes(modality.toLowerCase()) && (
-                                                        <span className="text-white text-xs">✓</span>
+                                                        <span className="text-xs text-white">✓</span>
                                                     )}
                                                 </div>
                                                 <span className="font-medium">{modality}</span>
@@ -224,7 +224,7 @@ const ModelDetails = () => {
                                 </div>
 
                                 {/* Context Length & Max Output Tokens */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     {/* Context Length */}
                                     <div className="space-y-3">
                                         <h3 className="text-base font-semibold text-black">Context length</h3>
@@ -262,7 +262,7 @@ const ModelDetails = () => {
             <div>
                 {/* <div className='scroll-nav' > */}
                 <div style={{ marginTop: "45%" }}  >
-                    <nav className=" flex flex-col w-40  border-gray-200 overflow-y-auto">
+                    <nav className="flex flex-col w-40 overflow-y-auto border-gray-200 ">
                         {['Overview', 'Configuration'].map((tab) => (
                             <button
                                 key={tab}

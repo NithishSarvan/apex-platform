@@ -442,8 +442,8 @@
   /* flex: 1;
   padding: 40px;
   overflow-y: auto; */
-  margin-right: 40px;
-  margin-left: auto;
+  /* margin-right: 40px;
+  margin-left: auto; */
 
   /* padding: 43px; */
   /* background-color: red; */
@@ -451,8 +451,8 @@
   background-color: #ffffff;
   margin-bottom: 20px;
   /* overflow-y: auto; */
-  width: 960px;
-  max-width: 980px;
+  /* width: 960px;
+  max-width: 980px; */
   padding-right: 0 !important;
 }
 
