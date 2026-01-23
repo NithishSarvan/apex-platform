@@ -78,9 +78,9 @@ const LicenseManagement = () => {
     return (
         <div className="main-content">
             {/* Header */}
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex flex-col items-start justify-between gap-3 mb-8 md:flex-row">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">License Management</h1>
+                    <h1 className="mb-2 text-2xl font-bold text-gray-900">License Management</h1>
                     <p className="text-gray-600">
                         Manage software licenses, track usage, and handle renewals
                     </p>
@@ -91,31 +91,31 @@ const LicenseManagement = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-4">
+                <div className="p-4 bg-white border border-gray-200 rounded-lg">
                     <div className="text-lg font-bold text-gray-900">156</div>
                     <div className="text-xs text-gray-600">Total Licenses</div>
                 </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="p-4 bg-white border border-gray-200 rounded-lg">
                     <div className="text-lg font-bold text-green-600">142</div>
                     <div className="text-xs text-gray-600">Active Licenses</div>
                 </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="p-4 bg-white border border-gray-200 rounded-lg">
                     <div className="text-lg font-bold text-yellow-600">8</div>
                     <div className="text-xs text-gray-600">Expiring Soon</div>
                 </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="p-4 bg-white border border-gray-200 rounded-lg">
                     <div className="text-lg font-bold text-gray-900">94%</div>
                     <div className="text-xs text-gray-600">Utilization Rate</div>
                 </div>
             </div>
 
             {/* Search and Actions */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-                <div className="flex flex-col md:flex-row gap-4">
+            <div className="p-4 mb-6 bg-white border border-gray-200 rounded-lg">
+                <div className="flex flex-col gap-4 md:flex-row">
                     <div className="flex-1">
                         <div className="relative">
-                            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <FiSearch className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search licenses..."
@@ -137,24 +137,24 @@ const LicenseManagement = () => {
             </div>
 
             {/* Licenses Table */}
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="overflow-hidden bg-white border border-gray-200 rounded-lg">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500">License ID</th>
-                                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500">Client</th>
-                                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500">Type</th>
-                                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500">Status</th>
-                                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500">Seats</th>
-                                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500">Expiry</th>
-                                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500">Actions</th>
+                                <th className="px-4 py-3 text-xs font-medium text-left text-gray-500">License ID</th>
+                                <th className="px-4 py-3 text-xs font-medium text-left text-gray-500">Client</th>
+                                <th className="px-4 py-3 text-xs font-medium text-left text-gray-500">Type</th>
+                                <th className="px-4 py-3 text-xs font-medium text-left text-gray-500">Status</th>
+                                <th className="px-4 py-3 text-xs font-medium text-left text-gray-500">Seats</th>
+                                <th className="px-4 py-3 text-xs font-medium text-left text-gray-500">Expiry</th>
+                                <th className="px-4 py-3 text-xs font-medium text-left text-gray-500">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {licenses.map(license => (
                                 <tr key={license.id} className="hover:bg-gray-50">
-                                    <td className="py-3 px-4">
+                                    <td className="px-4 py-3">
                                         <div className="text-sm font-medium text-gray-900">{license.id}</div>
                                         <div className="flex items-center gap-1 mt-1">
                                             <span className="text-xs text-gray-500 truncate max-w-[120px]">
@@ -168,20 +168,20 @@ const LicenseManagement = () => {
                                             </button>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-4">
+                                    <td className="px-4 py-3">
                                         <div className="text-sm text-gray-900">{license.client}</div>
                                     </td>
-                                    <td className="py-3 px-4">
+                                    <td className="px-4 py-3">
                                         <span className={`px-2 py-1 rounded text-xs font-medium ${getTypeColor(license.type)}`}>
                                             {license.type}
                                         </span>
                                     </td>
-                                    <td className="py-3 px-4">
+                                    <td className="px-4 py-3">
                                         <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(license.status)}`}>
                                             {license.status}
                                         </span>
                                     </td>
-                                    <td className="py-3 px-4">
+                                    <td className="px-4 py-3">
                                         <div className="text-sm text-gray-900">
                                             {license.usedSeats}/{license.seats}
                                         </div>
@@ -192,13 +192,13 @@ const LicenseManagement = () => {
                                             ></div>
                                         </div>
                                     </td>
-                                    <td className="py-3 px-4">
+                                    <td className="px-4 py-3">
                                         <div className="text-sm text-gray-900">{license.expiryDate}</div>
                                         <div className="text-xs text-gray-500">
                                             {license.status === 'Expiring' ? 'Expires in 3 months' : 'Active'}
                                         </div>
                                     </td>
-                                    <td className="py-3 px-4">
+                                    <td className="px-4 py-3">
                                         <div className="flex gap-2">
                                             <button className="p-1 text-blue-600 hover:text-blue-800">
                                                 <FiEdit size={14} />

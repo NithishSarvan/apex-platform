@@ -88,7 +88,7 @@ const BillingSummary = () => {
     return (
         <div className="main-content">
             {/* Header */}
-            <div className="flex flex-col items-start justify-between gap-2 mb-8 md:flex-row md:gap-0">
+            <div className="flex flex-col items-start justify-between gap-2 mb-8 md:flex-row ">
                 <div>
                     <h1 className="mb-2 text-2xl font-bold text-gray-900">Billing Summary</h1>
                     <p className="text-gray-600">

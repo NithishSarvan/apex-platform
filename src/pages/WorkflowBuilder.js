@@ -184,8 +184,8 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                     <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">HTTP Method</label>
-                                <select className="w-full px-3 py-2 border border-gray-300 rounded text-sm">
+                                <label className="block mb-1 text-xs font-medium text-gray-600">HTTP Method</label>
+                                <select className="w-full px-3 py-2 text-sm border border-gray-300 rounded">
                                     <option>GET</option>
                                     <option>POST</option>
                                     <option>PUT</option>
@@ -194,37 +194,37 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Timeout (seconds)</label>
+                                <label className="block mb-1 text-xs font-medium text-gray-600">Timeout (seconds)</label>
                                 <input
                                     type="number"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded"
                                     defaultValue="30"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">API URL</label>
+                            <label className="block mb-1 text-xs font-medium text-gray-600">API URL</label>
                             <input
                                 type="text"
-                                className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded"
                                 placeholder="https://api.example.com/endpoint"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Headers (JSON)</label>
+                            <label className="block mb-1 text-xs font-medium text-gray-600">Headers (JSON)</label>
                             <textarea
-                                className="w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono"
+                                className="w-full px-3 py-2 font-mono text-sm border border-gray-300 rounded"
                                 rows="3"
                                 placeholder='{"Content-Type": "application/json", "Authorization": "Bearer token"}'
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Request Body (JSON)</label>
+                            <label className="block mb-1 text-xs font-medium text-gray-600">Request Body (JSON)</label>
                             <textarea
-                                className="w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono"
+                                className="w-full px-3 py-2 font-mono text-sm border border-gray-300 rounded"
                                 rows="4"
                                 placeholder='{"key": "value"}'
                             />
@@ -236,8 +236,8 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                 return (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Model Selection</label>
-                            <select className="w-full px-3 py-2 border border-gray-300 rounded text-sm">
+                            <label className="block mb-1 text-xs font-medium text-gray-600">Model Selection</label>
+                            <select className="w-full px-3 py-2 text-sm border border-gray-300 rounded">
                                 <option>GPT-4</option>
                                 <option>GPT-3.5 Turbo</option>
                                 <option>Claude 2</option>
@@ -248,7 +248,7 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Temperature</label>
+                                <label className="block mb-1 text-xs font-medium text-gray-600">Temperature</label>
                                 <input
                                     type="range"
                                     min="0"
@@ -257,22 +257,22 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                                     className="w-full"
                                     defaultValue="0.7"
                                 />
-                                <div className="text-xs text-gray-500 text-center">0.7</div>
+                                <div className="text-xs text-center text-gray-500">0.7</div>
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Max Tokens</label>
+                                <label className="block mb-1 text-xs font-medium text-gray-600">Max Tokens</label>
                                 <input
                                     type="number"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded"
                                     defaultValue="1000"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">System Prompt</label>
+                            <label className="block mb-1 text-xs font-medium text-gray-600">System Prompt</label>
                             <textarea
-                                className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded"
                                 rows="3"
                                 placeholder="You are a helpful assistant..."
                             />
@@ -284,9 +284,9 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                 return (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Configuration</label>
+                            <label className="block mb-1 text-xs font-medium text-gray-600">Configuration</label>
                             <textarea
-                                className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded"
                                 rows="4"
                                 placeholder="Configure this node..."
                             />
@@ -302,26 +302,25 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
         <div className='main-content'>
 
 
-            <div className="flex gap-2 items-center ">
+            <div className="flex flex-col items-start justify-between gap-3 mb-8 md:flex-row ">
 
                 <div>
                     <h1 className="text-2xl font-bold text-black-500">Workflow Builder</h1>
 
                 </div>
             </div>
-            <div className='heighligts my-4' >
+            <div className='my-4 heighligts' >
                 <p className="text-sm text-gray-600 ">Drag and drop nodes to create your automation workflow. Connect them to define the execution flow.</p>
             </div>
 
-            <div className="grid grid-cols-4 gap-6">
-                {/* Node Library */}
-                <div className="col-span-1">
+            <div className="grid gap-4 lg:gap-6 lg:grid-cols-4">
+                <div className="col-span-4 md:col-span-1 ">
                     <div className="card">
-                        <h4 className="font-semibold mb-4">Node Library</h4>
+                        <h4 className="mb-4 font-semibold">Node Library</h4>
 
                         <div className="space-y-3">
                             <div>
-                                <h5 className="text-sm font-medium text-gray-700 mb-2">Triggers</h5>
+                                <h5 className="mb-2 text-sm font-medium text-gray-700">Triggers</h5>
                                 <div className="space-y-2">
                                     {nodeTypes.filter(n => n.type === 'trigger').map((node, index) => (
                                         <div
@@ -345,7 +344,7 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                             </div>
 
                             <div>
-                                <h5 className="text-sm font-medium text-gray-700 mb-2">Actions</h5>
+                                <h5 className="mb-2 text-sm font-medium text-gray-700">Actions</h5>
                                 <div className="space-y-2">
                                     {nodeTypes.filter(n => n.type === 'action').map((node, index) => (
                                         <div
@@ -372,8 +371,8 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
 
                     {/* Selected Node Configuration */}
                     {/* {selectedNodeData && (
-                        <div className="card mt-4">
-                            <h4 className="font-semibold mb-4">Configure Node</h4>
+                        <div className="mt-4 card">
+                            <h4 className="mb-4 font-semibold">Configure Node</h4>
                             <div className="space-y-4">
                                 <div>
                                     <label className="label">Node Name</label>
@@ -406,7 +405,7 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
 
                                 <button
                                     onClick={() => deleteNode(selectedNode)}
-                                    className="btn btn-secondary w-full"
+                                    className="w-full btn btn-secondary"
                                 >
                                     <FiTrash2 /> Delete Node
                                 </button>
@@ -418,9 +417,9 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                     {selectedNodeData ? (
                         <>
                             {/* Configure Node Section */}
-                            <div className="border-b pb-4">
+                            <div className="pb-4 border-b">
                                 <div
-                                    className="flex items-center justify-between cursor-pointer mb-3"
+                                    className="flex items-center justify-between mb-3 cursor-pointer"
                                     onClick={() => toggleSection('configuration')}
                                 >
                                     <h3 className="font-semibold text-gray-800">
@@ -437,10 +436,10 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                                         {renderNodeConfiguration()}
 
                                         <div className="flex gap-2 pt-4">
-                                            <button className="flex-1 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm font-medium">
+                                            <button className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600">
                                                 Save Changes
                                             </button>
-                                            <button className="py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded text-sm">
+                                            <button className="px-4 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300">
                                                 Test
                                             </button>
                                         </div>
@@ -451,7 +450,7 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                             {/* Description Section */}
                             <div>
                                 <div
-                                    className="flex items-center justify-between cursor-pointer mb-3"
+                                    className="flex items-center justify-between mb-3 cursor-pointer"
                                     onClick={() => toggleSection('description')}
                                 >
                                     <h3 className="font-semibold text-gray-800">Description</h3>
@@ -464,7 +463,7 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                                 {expandedSections.description && (
                                     <div>
                                         <textarea
-                                            className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded"
                                             rows="5"
                                             placeholder="Describe what this node does..."
                                             value={selectedNodeData.config?.description || ''}
@@ -483,19 +482,19 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
 
                             {/* Quick Actions */}
                             <div className="pt-4 border-t">
-                                <h4 className="text-sm font-semibold text-gray-700 mb-3">Quick Actions</h4>
+                                <h4 className="mb-3 text-sm font-semibold text-gray-700">Quick Actions</h4>
                                 <div className="space-y-2">
                                     {/* <button
-                                        className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded text-sm text-left flex items-center gap-2"
+                                        className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left bg-gray-100 rounded hover:bg-gray-200"
                                         onClick={() => duplicateNode(selectedNodeData.id)}
                                     >
                                         <FiCopy size={14} /> Duplicate Node
                                     </button> */}
-                                    <button className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded text-sm text-left">
+                                    <button className="w-full px-4 py-2 text-sm text-left bg-gray-100 rounded hover:bg-gray-200">
                                         Export Configuration
                                     </button>
                                     <button
-                                        className="w-full py-2 px-4 bg-red-50 hover:bg-red-100 text-red-600 rounded text-sm text-left flex items-center gap-2"
+                                        className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 rounded bg-red-50 hover:bg-red-100"
                                         onClick={() => deleteNode(selectedNodeData.id)}
                                     >
                                         <FiTrash2 size={14} /> Delete Node
@@ -504,9 +503,9 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                             </div>
                         </>
                     ) : (
-                        <div className="text-center py-12 text-gray-500">
-                            <div className="text-4xl mb-4">⚙️</div>
-                            <h3 className="text-lg font-medium mb-2">Select a Node</h3>
+                        <div className="py-12 text-center text-gray-500">
+                            <div className="mb-4 text-4xl">⚙️</div>
+                            <h3 className="mb-2 text-lg font-medium">Select a Node</h3>
                             <p className="text-sm">Click on any node to configure it</p>
                         </div>
                     )}
@@ -515,7 +514,7 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                 {/* Workflow Canvas */}
                 <div className="col-span-3">
                     <div className="card">
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex items-center justify-between mb-4">
                             <h4 className="font-semibold">Workflow Canvas</h4>
                             <div className="flex gap-2">
                                 <button className="btn btn-secondary btn-sm">
@@ -587,11 +586,11 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                                     onClick={() => setSelectedNode(node.id)}
                                 >
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center">
+                                        <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded">
                                             {node.icon}
                                         </div>
                                         <div>
-                                            <div className="font-semibold text-sm">{node.title}</div>
+                                            <div className="text-sm font-semibold">{node.title}</div>
                                             <div className="text-xs text-gray-500">
                                                 {node.type === 'trigger' ? 'Trigger' : 'Action'}
                                             </div>
@@ -606,8 +605,8 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                             {/* Empty State */}
                             {workflow.nodes.length === 0 && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
-                                    <FiPlus className="text-4xl mb-4" />
-                                    <h4 className="font-medium mb-2">No nodes added</h4>
+                                    <FiPlus className="mb-4 text-4xl" />
+                                    <h4 className="mb-2 font-medium">No nodes added</h4>
                                     <p className="text-sm">Drag nodes from the library or click to add them</p>
                                 </div>
                             )}
@@ -615,7 +614,7 @@ const WorkflowBuilder = ({ data, onUpdate }) => {
                     </div>
 
                     {/* Workflow Summary */}
-                    <div className="mt-4 grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4 mt-4">
                         <div className="p-4 border border-gray-200 rounded-lg">
                             <div className="text-sm text-gray-600">Total Nodes</div>
                             <div className="text-2xl font-bold">{workflow.nodes.length}</div>

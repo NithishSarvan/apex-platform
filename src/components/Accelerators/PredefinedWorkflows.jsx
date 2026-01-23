@@ -229,7 +229,7 @@ const PredefinedWorkflows = () => {
             {/* Header Section */}
 
             <div className="mb-6">
-                <div className="flex justify-between items-start ">
+                <div className="flex flex-col items-start justify-between gap-3 mb-8 md:flex-row ">
                     <h1 className="text-2xl font-bold text-black-500">Predefined Workflows</h1>
                     {/* <button className="px-4 py-2 bg-[#00d4aa] hover:bg-[#00b894] text-white rounded-lg font-medium transition-colors">
                         Configure AI
@@ -237,7 +237,7 @@ const PredefinedWorkflows = () => {
                     <button className="request-model-btn" onClick={() => navigate('/workflows')}
                     >Create Custom</button>
                 </div>
-                <div className='heighligts my-4'>
+                <div className='my-4 heighligts'>
                     <p className="text-sm text-gray-600">Ready-to-use workflow templates for common automation scenarios</p>
                 </div>
             </div>
@@ -248,12 +248,12 @@ const PredefinedWorkflows = () => {
 
 
                 {/* Top Navigation Bar with Search and Filters */}
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
-                    <div className="flex flex-col md:flex-row md:items-center gap-4">
+                <div className="p-4 bg-white border border-gray-200 rounded-lg">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center">
                         {/* Search Bar */}
                         <div className="flex-1">
                             <div className="relative">
-                                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                <FiSearch className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={18} />
                                 <input
                                     type="text"
                                     placeholder="Search workflows..."
@@ -267,7 +267,7 @@ const PredefinedWorkflows = () => {
                         {/* Filter Controls */}
                         <div className="flex items-center gap-3">
                             {/* View Toggle */}
-                            <div className="flex bg-gray-100 rounded-lg p-1">
+                            <div className="flex p-1 bg-gray-100 rounded-lg">
                                 <button
                                     onClick={() => setViewMode('grid')}
                                     className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : ''}`}
@@ -298,7 +298,7 @@ const PredefinedWorkflows = () => {
 
                     {/* Filter Categories - Dropdown/Pill Style */}
                     {showFilters && (
-                        <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="pt-4 mt-4 border-t border-gray-200">
                             <div className="flex flex-wrap gap-2">
                                 {tabs.map(tab => (
                                     <button
@@ -350,12 +350,12 @@ const PredefinedWorkflows = () => {
                 {filteredWorkflows.map(workflow => (
                     <div
                         key={workflow.id}
-                        className="bg-white rounded-lg border border-gray-200 p-5"
+                        className="p-5 bg-white border border-gray-200 rounded-lg"
                     >
                         {/* Title with badge */}
-                        <div className="flex justify-between items-center mb-3">
+                        <div className="flex items-center justify-between mb-3">
                             <h3 className="font-bold text-gray-900">{workflow.name}</h3>
-                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                            <span className="px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded">
                                 {workflow.nodes} nodes
                             </span>
                         </div>
@@ -373,7 +373,7 @@ const PredefinedWorkflows = () => {
                         </div>
 
                         {/* Description */}
-                        <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                        <p className="mb-4 text-sm leading-relaxed text-gray-600">
                             {workflow.description}
                         </p>
 
@@ -390,7 +390,7 @@ const PredefinedWorkflows = () => {
                         <div className="mb-4">
                             <button
                                 onClick={() => toggleExpand(workflow.id)}
-                                className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+                                className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
                             >
                                 {expandedWorkflow === workflow.id ? 'Show Less' : 'View Details'}
                                 {expandedWorkflow === workflow.id ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />}
@@ -399,8 +399,8 @@ const PredefinedWorkflows = () => {
 
                         {/* Expanded content */}
                         {expandedWorkflow === workflow.id && (
-                            <div className="mb-4 pt-3 border-t border-gray-100">
-                                <div className="text-xs text-gray-500 mb-2">Steps:</div>
+                            <div className="pt-3 mb-4 border-t border-gray-100">
+                                <div className="mb-2 text-xs text-gray-500">Steps:</div>
                                 <div className="space-y-1.5">
                                     {workflow.steps.map((step, index) => (
                                         <div key={index} className="text-sm text-gray-600">
@@ -425,10 +425,10 @@ const PredefinedWorkflows = () => {
 
             {/* Empty State */}
             {filteredWorkflows.length === 0 && (
-                <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
-                    <div className="text-4xl mb-4">🔍</div>
-                    <h3 className="text-lg font-semibold text-gray-700 mb-2">No workflows found</h3>
-                    <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                <div className="py-16 text-center bg-white border border-gray-200 rounded-lg">
+                    <div className="mb-4 text-4xl">🔍</div>
+                    <h3 className="mb-2 text-lg font-semibold text-gray-700">No workflows found</h3>
+                    <p className="max-w-md mx-auto mb-6 text-gray-500">
                         Try adjusting your search terms or select a different category
                     </p>
                     <button

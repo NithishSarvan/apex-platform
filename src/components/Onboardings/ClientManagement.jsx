@@ -129,9 +129,9 @@ const ClientManagement = () => {
     return (
         <div className="main-content">
             {/* Header */}
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex flex-col items-start justify-between gap-3 mb-8 md:flex-row">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Client Management</h1>
+                    <h1 className="mb-2 text-2xl font-bold text-gray-900">Client Management</h1>
                     <p className="text-gray-600">
                         Manage client accounts, track activities, and oversee client relationships
                     </p>
@@ -142,11 +142,11 @@ const ClientManagement = () => {
             </div>
 
             {/* Search and Filter */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-                <div className="flex flex-col md:flex-row gap-4">
+            <div className="p-4 mb-6 bg-white border border-gray-200 rounded-lg">
+                <div className="flex flex-col gap-4 md:flex-row">
                     <div className="flex-1">
                         <div className="relative">
-                            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <FiSearch className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search clients..."
@@ -176,10 +176,10 @@ const ClientManagement = () => {
             {/* Clients List */}
             <div className="space-y-4">
                 {clients.map(client => (
-                    <div key={client.id} className="bg-white rounded-lg border border-gray-200 p-5">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between">
+                    <div key={client.id} className="p-5 bg-white border border-gray-200 rounded-lg">
+                        <div className="flex flex-col justify-between md:flex-row md:items-center">
                             <div className="flex items-center gap-3 mb-4 md:mb-0">
-                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg">
                                     <FiUser className="text-blue-600" size={20} />
                                 </div>
                                 <div>
@@ -209,7 +209,7 @@ const ClientManagement = () => {
                         </div>
 
                         {/* Basic Info */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-3">
                             <div className="flex items-center gap-2 text-sm">
                                 <FiMail className="text-gray-400" size={16} />
                                 <span className="text-gray-600">{client.email}</span>
@@ -225,14 +225,14 @@ const ClientManagement = () => {
 
                         {/* Expanded Details */}
                         {expandedClient === client.id && (
-                            <div className="mt-4 pt-4 border-t border-gray-100">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="pt-4 mt-4 border-t border-gray-100">
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <div className="text-sm font-medium text-gray-700 mb-1">Location</div>
+                                        <div className="mb-1 text-sm font-medium text-gray-700">Location</div>
                                         <div className="text-sm text-gray-600">{client.location}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm font-medium text-gray-700 mb-1">Active Users</div>
+                                        <div className="mb-1 text-sm font-medium text-gray-700">Active Users</div>
                                         <div className="text-sm text-gray-600">{client.users} users</div>
                                     </div>
                                 </div>
@@ -248,10 +248,10 @@ const ClientManagement = () => {
              flex justify-center z-50 p-4">
                     <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         {/* Modal Header */}
-                        <div className="flex justify-between items-center p-6 border-b border-gray-200">
+                        <div className="flex items-center justify-between p-6 border-b border-gray-200">
                             <div>
                                 <h2 className="text-xl font-bold text-gray-900">Add New Client</h2>
-                                <p className="text-sm text-gray-600 mt-1">Fill in the client details below</p>
+                                <p className="mt-1 text-sm text-gray-600">Fill in the client details below</p>
                             </div>
                             <button
                                 onClick={() => {
@@ -266,16 +266,16 @@ const ClientManagement = () => {
 
                         {/* Modal Body */}
                         <div className="p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 {/* Basic Information */}
                                 <div className="md:col-span-2">
-                                    <h3 className="font-medium text-gray-700 mb-4 flex items-center gap-2">
+                                    <h3 className="flex items-center gap-2 mb-4 font-medium text-gray-700">
                                         <FiUser /> Basic Information
                                     </h3>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         Full Name *
                                     </label>
                                     <input
@@ -290,7 +290,7 @@ const ClientManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         Email Address *
                                     </label>
                                     <input
@@ -305,7 +305,7 @@ const ClientManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         Phone Number
                                     </label>
                                     <input
@@ -319,7 +319,7 @@ const ClientManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         Company Name
                                     </label>
                                     <input
@@ -333,14 +333,14 @@ const ClientManagement = () => {
                                 </div>
 
                                 {/* Address Information */}
-                                <div className="md:col-span-2 mt-4">
-                                    <h3 className="font-medium text-gray-700 mb-4 flex items-center gap-2">
+                                <div className="mt-4 md:col-span-2">
+                                    <h3 className="flex items-center gap-2 mb-4 font-medium text-gray-700">
                                         <FiHome /> Address Information
                                     </h3>
                                 </div>
 
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         Street Address
                                     </label>
                                     <input
@@ -354,7 +354,7 @@ const ClientManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         City
                                     </label>
                                     <input
@@ -368,7 +368,7 @@ const ClientManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         State
                                     </label>
                                     <input
@@ -382,7 +382,7 @@ const ClientManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         ZIP Code
                                     </label>
                                     <input
@@ -396,12 +396,12 @@ const ClientManagement = () => {
                                 </div>
 
                                 {/* Account Settings */}
-                                <div className="md:col-span-2 mt-4">
-                                    <h3 className="font-medium text-gray-700 mb-4">Account Settings</h3>
+                                <div className="mt-4 md:col-span-2">
+                                    <h3 className="mb-4 font-medium text-gray-700">Account Settings</h3>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         Plan Type
                                     </label>
                                     <select
@@ -417,7 +417,7 @@ const ClientManagement = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-700">
                                         Initial Status
                                     </label>
                                     <select
@@ -441,7 +441,7 @@ const ClientManagement = () => {
                                     setShowAddModal(false);
                                     resetNewClientForm();
                                 }}
-                                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
                             >
                                 Cancel
                             </button>
