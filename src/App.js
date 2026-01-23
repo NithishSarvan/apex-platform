@@ -57,9 +57,10 @@ function App() {
 
         <div className="main-container">
           <Sidebar
-            activeView={activeView}
-            setActiveView={setActiveView}
-            collapsed={sidebarCollapsed}
+           activeView={activeView}
+  setActiveView={setActiveView}
+  collapsed={sidebarCollapsed}
+  setCollapsed={setSidebarCollapsed}
           />
 
           <Routes>
