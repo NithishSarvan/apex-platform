@@ -175,7 +175,7 @@ const Header = ({ onToggleSidebar }) => {
                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                     MenuListProps={{
                         sx: {
-                            padding: 0,   // ✅ removes default Menu padding
+                            padding: 0,   
                         },
                     }}
                     PaperProps={{

@@ -1,25 +1,52 @@
-import { Box, Button, Typography, TextField, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider, IconButton, Slider, Menu, MenuItem, Drawer, FormControl, InputLabel, Select, TextareaAutosize } from "@mui/material";
-import { PiFloppyDiskBackLight, PiPaintBrushHouseholdLight } from "react-icons/pi";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Divider,
+  IconButton,
+  Slider,
+  Menu,
+  MenuItem,
+  Drawer,
+  FormControl,
+  InputLabel,
+  Select,
+  TextareaAutosize,
+} from "@mui/material";
+import {
+  PiFloppyDiskBackLight,
+  PiPaintBrushHouseholdLight,
+} from "react-icons/pi";
 import { VscGitCompare } from "react-icons/vsc";
 import { FaBarsProgress } from "react-icons/fa6";
 import { IoMdArrowDropup, IoMdPlay } from "react-icons/io";
-import { CiCirclePlus } from "react-icons/ci"
-import gpt from "../../assets/gpt-JRKBi7sz.svg"
-import meta from "../../assets/meta-svg.svg"
-import mbzuai from "../../assets/mbzuai.svg"
-import inception from "../../assets/inception.svg"
-import mistral from "../../assets/mistral.svg"
-import stablediffusion from "../../assets/stablediffusion.png"
-import anthropicCalude from "../../assets/anthropicCalude.svg"
-import deepseek from "../../assets/deepseek.svg"
-import qwen from "../../assets/qwen.svg"
-import cohere from "../../assets/cohere.svg"
-import xai from "../../assets/xai.svg"
-import dataset from "../../assets/dataset.svg"
+import { CiCirclePlus } from "react-icons/ci";
+import gpt from "../../assets/gpt-JRKBi7sz.svg";
+import meta from "../../assets/meta-svg.svg";
+import mbzuai from "../../assets/mbzuai.svg";
+import inception from "../../assets/inception.svg";
+import mistral from "../../assets/mistral.svg";
+import stablediffusion from "../../assets/stablediffusion.png";
+import anthropicCalude from "../../assets/anthropicCalude.svg";
+import deepseek from "../../assets/deepseek.svg";
+import qwen from "../../assets/qwen.svg";
+import cohere from "../../assets/cohere.svg";
+import xai from "../../assets/xai.svg";
+import dataset from "../../assets/dataset.svg";
 import React, { useState } from "react";
-import { MdKeyboardArrowUp, MdMic, MdVisibility, MdVisibilityOff } from "react-icons/md";
+import {
+  MdKeyboardArrowUp,
+  MdMic,
+  MdVisibility,
+  MdVisibilityOff,
+} from "react-icons/md";
 import { LuHeadset } from "react-icons/lu";
-
 
 const gradientText = {
   background: "linear-gradient(to right, #11a77cb9, #0072ff)",
@@ -28,105 +55,109 @@ const gradientText = {
 };
 
 const Realtime = () => {
-
-
   const [providers, setProviders] = useState([
     {
-      name: 'OpenAI',
+      name: "OpenAI",
       logo: gpt,
-      description: 'Advanced AI models including GPT-4'
+      description: "Advanced AI models including GPT-4",
     },
     {
-      name: 'Anthropic',
+      name: "Anthropic",
       logo: anthropicCalude,
-      description: 'Claude series models'
+      description: "Claude series models",
     },
     {
-      name: 'Google',
+      name: "Google",
       logo: xai,
-      description: 'Gemini and PaLM models'
+      description: "Gemini and PaLM models",
     },
     {
-      name: 'Meta',
+      name: "Meta",
       logo: meta,
-      description: 'Llama series models'
+      description: "Llama series models",
     },
     {
-      name: 'Microsoft',
+      name: "Microsoft",
       logo: cohere,
-      description: 'Azure AI models'
+      description: "Azure AI models",
     },
     {
-      name: 'Amazon',
+      name: "Amazon",
       logo: deepseek,
-      description: 'Bedrock models'
-    }
+      description: "Bedrock models",
+    },
   ]);
-
 
   const [models, setModels] = useState([
     {
-      id: 'gpt-4',
-      name: 'GPT-4o',
+      id: "gpt-4",
+      name: "GPT-4o",
       desc: `GPT-4o is OpenAI's latest model, offering faster, more efficient, and skillful multimodal reasoning for text inputs while maintaining improved accuracy, coherence, and responsiveness.`,
-      sector: 'Insurance',
-      subDomain: 'Finance',
-      modelType: 'API',
-      maxToken: '32768',
+      sector: "Insurance",
+      subDomain: "Finance",
+      modelType: "API",
+      maxToken: "32768",
       useCase: "Policy Inquiry & Claims Assistance",
-      logo: gpt
+      logo: gpt,
     },
     {
-      id: 'gpt-41', name: 'GPT-4o mini', desc: `OpenAI's most advanced model in the small models category supports text inputs and generates text outputs, making it ideal for smaller tasks.`,
-      sector: 'Insurance',
-      subDomain: 'Policy Quotation',
-      modelType: 'API',
-      maxToken: '32768',
+      id: "gpt-41",
+      name: "GPT-4o mini",
+      desc: `OpenAI's most advanced model in the small models category supports text inputs and generates text outputs, making it ideal for smaller tasks.`,
+      sector: "Insurance",
+      subDomain: "Policy Quotation",
+      modelType: "API",
+      maxToken: "32768",
       useCase: "Workflow Automation",
-      logo: gpt
+      logo: gpt,
     },
     {
-      id: 'gpt-42', name: 'K2 Think Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Cerebras clusters.`,
-      sector: 'Insurance',
-      subDomain: 'Finance',
-      modelType: 'Self',
-      maxToken: '32768',
+      id: "gpt-42",
+      name: "K2 Think Cerebras",
+      desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Cerebras clusters.`,
+      sector: "Insurance",
+      subDomain: "Finance",
+      modelType: "Self",
+      maxToken: "32768",
       useCase: "Claims Assistance",
-      logo: mistral
+      logo: mistral,
     },
     {
-      id: 'gpt-43', name: 'gpt-oss-120b Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Core42 cloud located in the UAE region.`,
-      sector: 'Insurance',
-      subDomain: 'Agent',
-      modelType: 'API',
-      maxToken: '32768',
+      id: "gpt-43",
+      name: "gpt-oss-120b Cerebras",
+      desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Core42 cloud located in the UAE region.`,
+      sector: "Insurance",
+      subDomain: "Agent",
+      modelType: "API",
+      maxToken: "32768",
       useCase: "Fraud Detection",
-      logo: gpt
+      logo: gpt,
     },
     {
-      id: 'gpt-44', name: 'Whisper', desc: `Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitask model that can perform multilingual speech recognition as well as speech translation and language identification.`,
-      sector: 'Others',
-      subDomain: 'Customer',
-      modelType: 'Self',
-      maxToken: '32768',
+      id: "gpt-44",
+      name: "Whisper",
+      desc: `Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitask model that can perform multilingual speech recognition as well as speech translation and language identification.`,
+      sector: "Others",
+      subDomain: "Customer",
+      modelType: "Self",
+      maxToken: "32768",
       useCase: "Policy Renewal & Alerts",
-      logo: gpt
+      logo: gpt,
     },
     {
-      id: 'gpt-45', name: 'Llama 3 70B', desc: `Llama 3 is an auto-regressive language model, part of the Llama 3 family, and the next generation of Meta's open-source LLMs. It is one of the most capable openly available LLMs with improved reasoning capabilities compared to its previous models.`,
-      sector: 'Others',
-      subDomain: 'Finance',
-      modelType: 'Self',
-      maxToken: '32768',
+      id: "gpt-45",
+      name: "Llama 3 70B",
+      desc: `Llama 3 is an auto-regressive language model, part of the Llama 3 family, and the next generation of Meta's open-source LLMs. It is one of the most capable openly available LLMs with improved reasoning capabilities compared to its previous models.`,
+      sector: "Others",
+      subDomain: "Finance",
+      modelType: "Self",
+      maxToken: "32768",
       useCase: "Policy Inquiry & Customer Support",
-      logo: qwen
+      logo: qwen,
     },
-
   ]);
 
-
-
-  const [aiModel, setAiModel] = useState(false)
+  const [aiModel, setAiModel] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -135,7 +166,6 @@ const Realtime = () => {
   const toggleDrawer = (state) => () => {
     setOpen(state);
   };
-
 
   const menuOpen = Boolean(anchorEl);
 
@@ -160,10 +190,10 @@ const Realtime = () => {
     },
   };
 
-  const [activeTab, setActiveTab] = useState('trained'); // 'trained' or 'standard'
+  const [activeTab, setActiveTab] = useState("trained"); // 'trained' or 'standard'
   const [selectedModel, setSelectedModel] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
-  const [selectedModelName, setSelectedModelName] = useState('Gpt-5');
+  const [selectedModelName, setSelectedModelName] = useState("Gpt-5");
   const [selectedModelLogo, setSelectedModelLogo] = useState(gpt);
 
   const handleModelSelect = (model) => {
@@ -189,12 +219,9 @@ const Realtime = () => {
     setAiModel(false);
   };
 
-
   return (
-    <div className='main-content main-content-chat'>
-
-      <Box sx={{ display: "flex", width: "100%" }} >
-
+    <div className="main-content main-content-chat">
+      <Box sx={{ display: "flex", width: "100%" }}>
         <Box
           sx={{
             height: "100%",
@@ -204,10 +231,7 @@ const Realtime = () => {
             flexDirection: "column",
           }}
         >
-
-          <Box
-            className="realtime-header"
-          >
+          <Box className="realtime-header">
             {/* LEFT SIDE – Realtime */}
             <Box
               sx={{
@@ -220,7 +244,12 @@ const Realtime = () => {
             >
               <Box
                 onClick={() => setAiModel(true)}
-                sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  cursor: "pointer",
+                }}
               >
                 <img src={selectedModelLogo} alt="GPT" width={40} />
                 <Typography variant="h6" fontWeight="bold">
@@ -244,7 +273,6 @@ const Realtime = () => {
               </Typography>
             </Box>
           </Box>
-
 
           {/* Configuration Panel - Positioned absolutely over the content */}
           <Box
@@ -313,14 +341,16 @@ const Realtime = () => {
 
             {/* Select */}
             <Box sx={{ mb: 3, backgroundColor: "#f4f5f6", py: 1 }}>
-              <FormControl fullWidth size="small" sx={{ backgroundColor: "#f4f5f6" }} >
+              <FormControl
+                fullWidth
+                size="small"
+                sx={{ backgroundColor: "#f4f5f6" }}
+              >
                 <InputLabel id="age-label">Model ID</InputLabel>
-                <Select
-                  labelId="age-label"
-                  label="Age"
-                  sx={grayInputSx}
-                >
-                  <MenuItem value={10}>gpt-4o-realtime-preview-2024-12-17</MenuItem>
+                <Select labelId="age-label" label="Age" sx={grayInputSx}>
+                  <MenuItem value={10}>
+                    gpt-4o-realtime-preview-2024-12-17
+                  </MenuItem>
                   {/* <MenuItem value={20}>Twenty</MenuItem>
                   <MenuItem value={30}>Thirty</MenuItem> */}
                 </Select>
@@ -348,13 +378,13 @@ const Realtime = () => {
             </Box>
             {/* Select */}
             <Box sx={{ mb: 3, backgroundColor: "#f4f5f6", py: 1 }}>
-              <FormControl fullWidth size="small" sx={{ backgroundColor: "#f4f5f6" }} >
+              <FormControl
+                fullWidth
+                size="small"
+                sx={{ backgroundColor: "#f4f5f6" }}
+              >
                 <InputLabel id="age-label">Voice</InputLabel>
-                <Select
-                  labelId="age-label"
-                  label="Age"
-                  sx={grayInputSx}
-                >
+                <Select labelId="age-label" label="Age" sx={grayInputSx}>
                   <MenuItem value={10}>Alloy</MenuItem>
                   <MenuItem value={10}>Ash</MenuItem>
                   <MenuItem value={10}>Ballad</MenuItem>
@@ -424,56 +454,50 @@ const Realtime = () => {
 
             {/* Note */}
             <Typography fontSize={12} color="gray">
-              Note: Token usage includes both input and output. Very low token limits
-              may prevent the model from generating a response.
+              Note: Token usage includes both input and output. Very low token
+              limits may prevent the model from generating a response.
             </Typography>
           </Box>
 
-
           {/* ================= CENTER ================= */}
-          <Box
-
-            className="realtime-subscription"
-          >
-
-          </Box>
-
+          <Box className="realtime-subscription"></Box>
 
           <Box
             sx={{
-              width: "800px",
               marginLeft: "auto",
               marginRight: "auto",
-              position: 'fixed', // Changed from absolute to fixed
-              zIndex: 1000, // Reduced from 9999 to 1000 (less than dialog's default 1300)
-              bottom: '20px', // Adjusted from 5px
-              left: '60%',
-              transform: 'translateX(-50%)',
-              backgroundColor: '#fff', // Added background to ensure visibility
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // Optional shadow
-              borderRadius: '12px', // Optional rounded corners
-              border: '1px solid #d0ccccff',
-
+              position: "fixed", 
+              zIndex: 1000, 
+              bottom: "20px", 
+              transform: "translateX(-50%)",
+              backgroundColor: "#fff", 
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+              borderRadius: "12px", 
+              border: "1px solid #d0ccccff",
+              width: {
+              xs: "90%",
+              md: "800px",
+            },
+               left:   {
+              xs: "50%",
+              md: "60%",
+            },
+             transform: 
+               {
+              xs: "translateX(-50%)",
+              md: "translateX(-50%)",
+            },
             }}
-
           >
-
-
-
-
             <Box
               sx={{
                 px: 3,
                 py: 1.3,
                 backgroundColor: "#fff",
                 border: "1px solid #d0ccccff",
-
-
               }}
             >
-
               <Box sx={{ width: "100%" }}>
-
                 <Box
                   sx={{
                     display: "flex",
@@ -494,11 +518,13 @@ const Realtime = () => {
                       textTransform: "none",
                     }}
                   >
-                    <IoMdPlay size={18} style={{ marginRight: "6px", color: "#ffffff" }} />
+                    <IoMdPlay
+                      size={18}
+                      style={{ marginRight: "6px", color: "#ffffff" }}
+                    />
                     Start Session
                   </Button>
                   {/* Mic Button */}
-
 
                   {/* Text Input */}
                   <TextField
@@ -517,25 +543,20 @@ const Realtime = () => {
                   <IconButton color="#d0ccccff">
                     <MdMic color="#d0ccccff" size={22} />
                   </IconButton>
-                  <Typography color="#d0ccccff" >Enable access</Typography>
+                  <Typography color="#d0ccccff">Enable access</Typography>
                   {/* Send Button */}
                   <IconButton
                     sx={{
                       color: "#d0ccccff",
-
                     }}
                   >
                     <IoMdArrowDropup color="#d0ccccff" size={18} />
                   </IconButton>
                 </Box>
               </Box>
-
-
             </Box>
           </Box>
-
         </Box>
-
 
         <Dialog
           open={aiModel}
@@ -553,28 +574,45 @@ const Realtime = () => {
         >
           {/* Header */}
           <DialogTitle sx={{ pb: 1, flexShrink: 0 }}>
-            <Typography variant="h6" fontWeight="bold">Select Model</Typography>
+            <Typography variant="h6" fontWeight="bold">
+              Select Model
+            </Typography>
           </DialogTitle>
 
           <Divider />
 
           {/* Body - This will take available space and scroll if needed */}
-          <Box sx={{
-            display: "flex",
-            flex: 1,
-            minHeight: 0, // Important for flex children to scroll
-            overflow: "hidden"
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              flex: 1,
+              minHeight: 0, // Important for flex children to scroll
+              overflow: "hidden",
+            }}
+          >
             {/* Left Sidebar */}
-            <Box className="chat-pop-left" sx={{
-              width: "220px",
-              flexShrink: 0,
+            <Box
+              className="chat-pop-left"
+              sx={{
+                width: "220px",
+                flexShrink: 0,
 
-              overflowY: "auto" // Add scroll if content overflows
-            }}>
+                overflowY: "auto", // Add scroll if content overflows
+              }}
+            >
               {[
-                { step: "01", label: "Trained Models", id: "trained", active: activeTab === 'trained' },
-                { step: "02", label: "Standard Models", id: "standard", active: activeTab === 'standard' },
+                {
+                  step: "01",
+                  label: "Trained Models",
+                  id: "trained",
+                  active: activeTab === "trained",
+                },
+                {
+                  step: "02",
+                  label: "Standard Models",
+                  id: "standard",
+                  active: activeTab === "standard",
+                },
               ].map((item) => (
                 <Box
                   key={item.step}
@@ -607,26 +645,35 @@ const Realtime = () => {
               }}
             >
               {/* Trained Models Section */}
-              {activeTab === 'trained' && (
+              {activeTab === "trained" && (
                 <Box>
                   <Typography variant="h6" fontWeight="bold" mb={3}>
                     Select from Trained Models
                   </Typography>
-                  <Box sx={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                    gap: 2
-                  }}>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(300px, 1fr))",
+                      gap: 2,
+                    }}
+                  >
                     {models.map((model) => (
                       <Box
                         key={model.id}
                         onClick={() => handleModelSelect(model)}
                         sx={{
-                          border: selectedModel?.id === model.id ? "2px solid #00d4aa" : "1px solid #e0e0e0",
+                          border:
+                            selectedModel?.id === model.id
+                              ? "2px solid #00d4aa"
+                              : "1px solid #e0e0e0",
                           borderRadius: 2,
                           p: 2.5,
                           cursor: "pointer",
-                          backgroundColor: selectedModel?.id === model.id ? "rgba(0, 212, 170, 0.05)" : "white",
+                          backgroundColor:
+                            selectedModel?.id === model.id
+                              ? "rgba(0, 212, 170, 0.05)"
+                              : "white",
                           transition: "all 0.2s ease",
                           "&:hover": {
                             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
@@ -637,30 +684,43 @@ const Realtime = () => {
                       >
                         {/* Selection Indicator */}
                         {selectedModel?.id === model.id && (
-                          <Box sx={{
-                            position: "absolute",
-                            top: 10,
-                            right: 10,
-                            backgroundColor: "#00d4aa",
-                            color: "white",
-                            borderRadius: "50%",
-                            width: 20,
-                            height: 20,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "12px",
-                          }}>
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              top: 10,
+                              right: 10,
+                              backgroundColor: "#00d4aa",
+                              color: "white",
+                              borderRadius: "50%",
+                              width: 20,
+                              height: 20,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: "12px",
+                            }}
+                          >
                             ✓
                           </Box>
                         )}
 
                         {/* Model Header */}
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 2,
+                            mb: 2,
+                          }}
+                        >
                           <img
                             src={model.logo}
                             alt={model.name}
-                            style={{ width: 40, height: 40, objectFit: "contain" }}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              objectFit: "contain",
+                            }}
                           />
                           <Box>
                             <Typography fontWeight="bold" fontSize="16px">
@@ -673,19 +733,28 @@ const Realtime = () => {
                         </Box>
 
                         {/* Model Description */}
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontSize: "13px" }}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 2, fontSize: "13px" }}
+                        >
                           {model.desc}
                         </Typography>
 
                         {/* Model Details Grid */}
-                        <Box sx={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(2, 1fr)",
-                          gap: 1.5,
-                          mt: 2
-                        }}>
+                        <Box
+                          sx={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(2, 1fr)",
+                            gap: 1.5,
+                            mt: 2,
+                          }}
+                        >
                           <Box>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
                               Sector
                             </Typography>
                             <Typography variant="body2" fontWeight="500">
@@ -693,7 +762,10 @@ const Realtime = () => {
                             </Typography>
                           </Box>
                           <Box>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
                               Sub-domain
                             </Typography>
                             <Typography variant="body2" fontWeight="500">
@@ -701,7 +773,10 @@ const Realtime = () => {
                             </Typography>
                           </Box>
                           <Box>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
                               Model Type
                             </Typography>
                             <Typography variant="body2" fontWeight="500">
@@ -709,7 +784,10 @@ const Realtime = () => {
                             </Typography>
                           </Box>
                           <Box>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
                               Max Tokens
                             </Typography>
                             <Typography variant="body2" fontWeight="500">
@@ -724,26 +802,35 @@ const Realtime = () => {
               )}
 
               {/* Standard Models Section */}
-              {activeTab === 'standard' && (
+              {activeTab === "standard" && (
                 <Box>
                   <Typography variant="h6" fontWeight="bold" mb={3}>
                     Select from Standard Models
                   </Typography>
-                  <Box sx={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-                    gap: 2
-                  }}>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(250px, 1fr))",
+                      gap: 2,
+                    }}
+                  >
                     {providers.map((provider) => (
                       <Box
                         key={provider.name}
                         onClick={() => handleProviderSelect(provider)}
                         sx={{
-                          border: selectedProvider?.name === provider.name ? "2px solid #00d4aa" : "1px solid #e0e0e0",
+                          border:
+                            selectedProvider?.name === provider.name
+                              ? "2px solid #00d4aa"
+                              : "1px solid #e0e0e0",
                           borderRadius: 2,
                           p: 3,
                           cursor: "pointer",
-                          backgroundColor: selectedProvider?.name === provider.name ? "rgba(0, 212, 170, 0.05)" : "white",
+                          backgroundColor:
+                            selectedProvider?.name === provider.name
+                              ? "rgba(0, 212, 170, 0.05)"
+                              : "white",
                           transition: "all 0.2s ease",
                           "&:hover": {
                             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
@@ -760,20 +847,22 @@ const Realtime = () => {
                       >
                         {/* Selection Indicator */}
                         {selectedProvider?.name === provider.name && (
-                          <Box sx={{
-                            position: "absolute",
-                            top: 10,
-                            right: 10,
-                            backgroundColor: "#00d4aa",
-                            color: "white",
-                            borderRadius: "50%",
-                            width: 20,
-                            height: 20,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "12px",
-                          }}>
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              top: 10,
+                              right: 10,
+                              backgroundColor: "#00d4aa",
+                              color: "white",
+                              borderRadius: "50%",
+                              width: 20,
+                              height: 20,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: "12px",
+                            }}
+                          >
                             ✓
                           </Box>
                         )}
@@ -781,13 +870,22 @@ const Realtime = () => {
                         <img
                           src={provider.logo}
                           alt={provider.name}
-                          style={{ width: 60, height: 60, objectFit: "contain", marginBottom: 12 }}
+                          style={{
+                            width: 60,
+                            height: 60,
+                            objectFit: "contain",
+                            marginBottom: 12,
+                          }}
                         />
                         <Typography fontWeight="bold" fontSize="18px">
                           {provider.name}
                         </Typography>
                         {provider.description && (
-                          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontSize: "13px" }}>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mt: 1, fontSize: "13px" }}
+                          >
                             {provider.description}
                           </Typography>
                         )}
@@ -800,19 +898,23 @@ const Realtime = () => {
           </Box>
 
           {/* Footer - Fixed at bottom */}
-          <Box sx={{
-            flexShrink: 0, // Prevent footer from shrinking
-            borderTop: 1,
-            borderColor: "divider",
-            backgroundColor: "#fafafa",
-            p: 2,
-          }}>
-            <Box sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 1,
-              px: 1,
-            }}>
+          <Box
+            sx={{
+              flexShrink: 0, // Prevent footer from shrinking
+              borderTop: 1,
+              borderColor: "divider",
+              backgroundColor: "#fafafa",
+              p: 2,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 1,
+                px: 1,
+              }}
+            >
               <Button
                 variant="outlined"
                 onClick={() => {
@@ -827,7 +929,7 @@ const Realtime = () => {
                   "&:hover": {
                     borderColor: "#00d4aa",
                     backgroundColor: "rgba(0, 212, 170, 0.05)",
-                  }
+                  },
                 }}
               >
                 Cancel
@@ -844,7 +946,7 @@ const Realtime = () => {
                   "&.Mui-disabled": {
                     backgroundColor: "#e0e0e0",
                     color: "#a6a6ae",
-                  }
+                  },
                 }}
                 onClick={handleApplySelection}
               >
@@ -853,10 +955,8 @@ const Realtime = () => {
             </Box>
           </Box>
         </Dialog>
-
-      </Box >
-
-    </div >
+      </Box>
+    </div>
   );
 };
 

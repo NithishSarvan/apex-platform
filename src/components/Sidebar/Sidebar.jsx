@@ -17,7 +17,7 @@ import {
 import { MdOutlineChatBubbleOutline } from "react-icons/md";
 import { TbListDetails } from "react-icons/tb";
 import { BiCollapse } from "react-icons/bi";
-const Sidebar = ({ activeView, setActiveView, collapsed }) => {
+const Sidebar = ({ activeView, setActiveView, collapsed, setCollapsed }) => {
 
     const [expanded, setExpanded] = useState({});
     const location = useLocation();
@@ -124,7 +124,23 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
             [label]: !prev[label]
         }));
     };
+    useEffect(() => {
+  if (window.innerWidth < 991) {
+    setCollapsed(true);
+  }
+}, [location.pathname]);
+const handleChildClick = (parentLabel) => {
+  if (collapsed) {
+    setExpanded(prev => ({
+      ...prev,
+      [parentLabel]: true
+    }));
+  }
 
+  if (window.innerWidth < 991) {
+    setCollapsed(true);
+  }
+};
     // Recursive component to render nested menu items
     const renderMenuItem = (item, level = 0) => {
         const isExpanded = expanded[item.label] || false;
@@ -143,7 +159,7 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                         {!collapsed && level === 0 && <span className="label">{item.label}</span>}
                         {/* {!collapsed && level > 0 && <span className="label nested-label">{item.label}</span>} */}
                         {!collapsed && level > 0 && (
-                            <div className='flex gap-3 items-center'>
+                            <div className='flex items-center gap-3'>
                                 <span className="nested-icon">{item.icon}</span>
                                 <span className="label nested-label ">
                                     {item.label}
@@ -180,14 +196,16 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                                                 }));
                                             }
                                         }}
+                                        onClick={() => handleChildClick(item.label)}
                                     >
 
                                         <div className="subitem-content">
-                                            <div className='flex gap-3 items-center'><span className="icon">{child.icon}</span>
+                                            <div className='flex items-center gap-3'><span className="icon">{child.icon}</span>
                                                 {child.label}
                                             </div>
                                         </div>
                                     </NavLink>
+                                    
                                 )}
                             </React.Fragment>
                         ))}
@@ -207,6 +225,8 @@ const Sidebar = ({ activeView, setActiveView, collapsed }) => {
                 <span className="icon">{item.icon}</span>
                 {!collapsed && <span className="label">{item.label}</span>}
             </NavLink>
+
+            
         );
     };
 

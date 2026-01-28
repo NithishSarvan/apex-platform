@@ -1,20 +1,35 @@
-import { Box, Button, Typography, TextField, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider, IconButton, Slider, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Divider,
+  IconButton,
+  Slider,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { PiPaintBrushHouseholdLight } from "react-icons/pi";
 import { VscGitCompare } from "react-icons/vsc";
 import { FaBarsProgress } from "react-icons/fa6";
 import { IoMdPlay } from "react-icons/io";
-import { CiCirclePlus } from "react-icons/ci"
-import gpt from "../../assets/gpt-JRKBi7sz.svg"
-import meta from "../../assets/meta-svg.svg"
-import mbzuai from "../../assets/mbzuai.svg"
-import inception from "../../assets/inception.svg"
-import mistral from "../../assets/mistral.svg"
-import stablediffusion from "../../assets/stablediffusion.png"
-import anthropicCalude from "../../assets/anthropicCalude.svg"
-import deepseek from "../../assets/deepseek.svg"
-import qwen from "../../assets/qwen.svg"
-import cohere from "../../assets/cohere.svg"
-import xai from "../../assets/xai.svg"
+import { CiCirclePlus } from "react-icons/ci";
+import gpt from "../../assets/gpt-JRKBi7sz.svg";
+import meta from "../../assets/meta-svg.svg";
+import mbzuai from "../../assets/mbzuai.svg";
+import inception from "../../assets/inception.svg";
+import mistral from "../../assets/mistral.svg";
+import stablediffusion from "../../assets/stablediffusion.png";
+import anthropicCalude from "../../assets/anthropicCalude.svg";
+import deepseek from "../../assets/deepseek.svg";
+import qwen from "../../assets/qwen.svg";
+import cohere from "../../assets/cohere.svg";
+import xai from "../../assets/xai.svg";
 import React, { useState } from "react";
 import { MdChevronLeft, MdChevronRight, MdDeleteOutline, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useLocation } from "react-router-dom";
@@ -54,7 +69,7 @@ const Chat = () => {
     { name: "Cohere", logo: cohere },
     { name: "xAI", logo: xai },
   ];
-  const [aiModel, setAiModel] = useState(false)
+  const [aiModel, setAiModel] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedModelId, setSelectedModelId] = useState(initialModelId || null);
@@ -389,15 +404,12 @@ const Chat = () => {
     setAnchorEl(null);
   };
 
-
-
   return (
-
-    <div className='main-content-chat'>
+    <div className=" main-content main-content-chat">
       <Box
         sx={{
           height: "90vh",
-          margin: 2,
+          margin: { md: "0", sm: "2" },
           display: "flex",
 
           flexDirection: "column",

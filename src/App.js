@@ -36,6 +36,22 @@ function AppFrame() {
   const [activeView, setActiveView] = useState('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // 🔹 Add/remove body class
+  useEffect(() => {
+    if (sidebarCollapsed) {
+      document.body.classList.add("sidebar-collapsed");
+    } else {
+      document.body.classList.remove("sidebar-collapsed");
+    }
+  }, [sidebarCollapsed]);
+
+  const basename =
+    process.env.NODE_ENV === "production" ? "/apex-platform" : "/";
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <div className="app">
       {!isLoginRoute && (
@@ -48,6 +64,7 @@ function AppFrame() {
             activeView={activeView}
             setActiveView={setActiveView}
             collapsed={sidebarCollapsed}
+            setCollapsed={setSidebarCollapsed}
           />
         )}
 
