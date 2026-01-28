@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header/Header';
@@ -49,7 +49,7 @@ function AppFrame() {
     process.env.NODE_ENV === "production" ? "/apex-platform" : "/";
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    // setAnchorEl(null);
   };
 
   return (
