@@ -2,6 +2,7 @@
 import FilterPanel from './FilterPanel';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     Dialog,
     DialogTitle,
@@ -17,6 +18,9 @@ import {
     Divider,
     Menu
 } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { apiGet, apiPost } from '../../api/client';
+import { apiPut } from '../../api/client';
 
 import gpt from "../../assets/gpt-JRKBi7sz.svg";
 import meta from "../../assets/meta-svg.svg";
@@ -33,68 +37,140 @@ import xai from "../../assets/xai.svg";
 const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-
-    const [providers, setProviders] = useState([
-        { id: 1, name: "OpenAI", description: "OpenAI", modelCount: 26 },
-        { id: 2, name: "Meta", description: "Meta", modelCount: 3 },
-        { id: 3, name: "MBZUAI", description: "MBZUAI", modelCount: 2 },
-        { id: 4, name: "Inception", description: "Inception", modelCount: 1 },
-        { id: 5, name: "Mistral AI", description: "mistral", modelCount: 3 },
-        { id: 6, name: "Stability AI", description: "Stability AI", modelCount: 1 },
-        { id: 7, name: "Anthropic", description: "Anthropic", modelCount: 1 },
-        { id: 8, name: "DeepSeek", description: "DeepSeek", modelCount: 1 },
-        { id: 9, name: "Qwen", description: "Qwen", modelCount: 3 },
-        { id: 10, name: "Cohere", description: "Cohere", modelCount: 4 },
-        { id: 11, name: "xAI", description: "xAI", modelCount: 1 },
-    ]);
+    const providerLogoByName = {
+        OpenAI: gpt,
+        Meta: meta,
+        MBZUAI: mbzuai,
+        Inception: inception,
+        "Mistral AI": mistral,
+        Anthropic: anthropicCalude,
+        DeepSeek: deepseek,
+        Qwen: qwen,
+        Cohere: cohere,
+        xAI: xai,
+    };
 
     const [modelType, setModelType] = useState([
         { id: 'API', name: "API-Hosted" },
         { id: 'SELF', name: "Sefl-Hosted" },
 
     ]);
+    const [search, setSearch] = useState("");
+    const [selectedProviderId, setSelectedProviderId] = useState("");
+    const [selectedType, setSelectedType] = useState("");
+    const [page, setPage] = useState(1);
+    const pageSize = 20;
 
-    const models = [
-        { id: 'gpt-4', logo: gpt, name: 'GPT-4o', desc: `GPT-4o is OpenAI's latest model, offering faster, more efficient, and skillful multimodal reasoning for text inputs while maintaining improved accuracy, coherence, and responsiveness.` },
-        { id: 'gpt-41', logo: gpt, name: 'GPT-4o mini', desc: `OpenAI's most advanced model in the small models category supports text inputs and generates text outputs, making it ideal for smaller tasks.` },
-        {
-            id: 'gpt-42', logo: deepseek, name: 'K2 Think Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Cerebras clusters.`
+    const { data: providers = [] } = useQuery({
+        queryKey: ["providers"],
+        queryFn: async () => apiGet("/api/providers"),
+    });
+
+    const { data: modelsPage, isLoading: modelsLoading, error: modelsError } = useQuery({
+        queryKey: ["models", { search, selectedProviderId, selectedType, page, pageSize }],
+        queryFn: async () => {
+            const params = new URLSearchParams();
+            if (search) params.set("q", search);
+            if (selectedProviderId) params.set("providerId", selectedProviderId);
+            if (selectedType) params.set("type", selectedType);
+            params.set("page", String(page));
+            params.set("pageSize", String(pageSize));
+            return apiGet(`/api/models?${params.toString()}`);
         },
-        { id: 'gpt-43', logo: gpt, name: 'gpt-oss-120b Cerebras', desc: `K2 Think is a reasoning model that achieves state-of-the-art performance with 32B parameters. It was developed in the UAE by Mohamed bin Zayed University of Artificial Intelligence (MBZUAI). The model is deployed and running on the Core42 cloud located in the UAE region.` },
-        { id: 'gpt-44', logo: gpt, name: 'Whisper', desc: `Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitask model that can perform multilingual speech recognition as well as speech translation and language identification.` },
-        { id: 'gpt-45', logo: mistral, name: 'Llama 3 70B', desc: `Llama 3 is an auto-regressive language model, part of the Llama 3 family, and the next generation of Meta's open-source LLMs. It is one of the most capable openly available LLMs with improved reasoning capabilities compared to its previous models.` }
-    ];
+    });
+
+    const models = modelsPage?.items || [];
 
     const [showAddModal, setShowAddModal] = useState(false);
+    const [mode, setMode] = useState("create"); // create | edit
+    const [editingModelId, setEditingModelId] = useState(null);
+    const [actionsAnchor, setActionsAnchor] = useState(null);
+    const [actionsModel, setActionsModel] = useState(null);
 
     const [newModel, setNewModel] = useState({
         name: '',
-        provider: '',
-        type: '',
-        endpoint: '',
-        apiKey: '',
-        cost: "",
-        url: "",
-        apikey: "",
-        logo: null
+        internalName: '',
+        providerId: "",
+        type: "",
+        url: "", // optional endpoint override (rare)
+        status: "ACTIVE",
     });
 
-    const handleAddModel = () => {
-        const newModelObj = {
-            id: `model-${Date.now()}`,
-            name: newModel.name,
-            provider: newModel.provider,
-            type: newModel.type,
-            maxTokens: newModel.maxTokens,
-            cost: newModel.cost,
-            status: 'inactive',
+    const createModel = useMutation({
+        mutationFn: async () => {
+            return apiPost("/api/models", {
+                name: newModel.name,
+                providerId: newModel.providerId || null,
+                modelKey: newModel.internalName || null,
+                type: newModel.type || "API",
+                status: newModel.status || "ACTIVE",
+                // recommended flow: base URL lives on Provider; model endpoint is an optional override
+                endpointUrl: newModel.url || null,
+            });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["models"] });
+            setShowAddModal(false);
+            setNewModel({ name: '', internalName: '', providerId: "", type: "", url: "", status: "ACTIVE" });
+            setMode("create");
+            setEditingModelId(null);
+        }
+    });
 
-        };
-        // setModels([...models, newModelObj]);
-        // setSelectedModel(newModelObj.id);
-        setShowAddModal(false);
-        // setNewModel({ name: '', provider: '', type: 'API', endpoint: '', apiKey: '' });
+    const updateModel = useMutation({
+        mutationFn: async () => {
+            if (!editingModelId) throw new Error("Missing model id");
+            return apiPut(`/api/models/${editingModelId}`, {
+                name: newModel.name || null,
+                providerId: newModel.providerId || null,
+                modelKey: newModel.internalName || null,
+                type: newModel.type || "API",
+                status: newModel.status || "ACTIVE",
+                endpointUrl: newModel.url || null,
+            });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["models"] });
+            setShowAddModal(false);
+            setNewModel({ name: '', internalName: '', providerId: "", type: "", url: "", status: "ACTIVE" });
+            setMode("create");
+            setEditingModelId(null);
+        }
+    });
+
+    const openActions = Boolean(actionsAnchor);
+    const handleActionsOpen = (event, model) => {
+        event.stopPropagation();
+        setActionsAnchor(event.currentTarget);
+        setActionsModel(model);
+    };
+    const handleActionsClose = () => {
+        setActionsAnchor(null);
+        setActionsModel(null);
+    };
+
+    const startCreate = () => {
+        setMode("create");
+        setEditingModelId(null);
+        setNewModel({ name: '', internalName: '', providerId: "", type: "", url: "", status: "ACTIVE" });
+        setShowAddModal(true);
+    };
+
+    const startEdit = (model) => {
+        handleActionsClose();
+        setMode("edit");
+        setEditingModelId(model.id);
+        setNewModel({
+            name: model.name || '',
+            internalName: model.modelKey || '',
+            providerId: model.providerId || "",
+            type: model.type || "API",
+            url: model.endpointUrl || "",
+            status: model.status || "ACTIVE",
+        });
+        setShowAddModal(true);
     };
 
 
@@ -172,7 +248,7 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
             <div className="catalog-header">
                 <h1>Model Catalog</h1>
                 <button className="request-model-btn"
-                    onClick={() => setShowAddModal(true)}>Request Model</button>
+                    onClick={startCreate}>Request Model</button>
             </div>
 
             <div className="catalog-controls">
@@ -284,27 +360,68 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                 <input
                     className="search-box"
                     placeholder="Search for a model..."
+                    value={search}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                    }}
                 />
             </div>
 
+            {modelsLoading && <p className="text-gray-600">Loading models...</p>}
+            {modelsError && <p className="text-red-600">Failed to load models: {modelsError.message}</p>}
+
             <div className="catalog-grid">
                 {models.map((model) => (
-                    <div key={model} className="model-card" onClick={() => navigate('/model-details', {
-                        state: {
-                            modelName: model.name,
-                            overview: model.desc,
-                            logo: model.logo
-                        },
-                    })}>
-                        <div className='flex  gap-2 mb-2'>
-                            <img src={model.logo} width={30} height={30} alt={model.name} />
-                            <h3 style={{ marginBottom: 0 }}>{model.name}</h3>
+                    <div key={model.id} className="model-card" onClick={() => navigate(`/model-details/${model.id}`)}>
+                        <div className='flex gap-2 mb-2' style={{ alignItems: "center", justifyContent: "space-between" }}>
+                            <div className='flex gap-2' style={{ alignItems: "center" }}>
+                                <img src={model.providerLogoUrl || providerLogoByName[model.providerName] || gpt} width={30} height={30} alt={model.name} />
+                                <h3 style={{ marginBottom: 0 }}>{model.name}</h3>
+                            </div>
+                            <IconButton
+                                size="small"
+                                onClick={(e) => handleActionsOpen(e, model)}
+                                aria-label="model actions"
+                            >
+                                <MoreVertIcon fontSize="small" />
+                            </IconButton>
                         </div>
 
-                        <p>{model.desc}</p>
+                        <p>{model.providerName ? `${model.providerName} • ${model.type}` : model.type}</p>
                     </div>
                 ))}
             </div>
+
+            <Menu
+                anchorEl={actionsAnchor}
+                open={openActions}
+                onClose={handleActionsClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <MenuItem onClick={() => actionsModel && startEdit(actionsModel)}>Edit</MenuItem>
+            </Menu>
+
+            {modelsPage && (
+                <div className="flex items-center justify-between mt-4">
+                    <div className="text-sm text-gray-600">
+                        Showing {models.length} of {modelsPage.total}
+                    </div>
+                    <div className="flex gap-2">
+                        <button className="btn btn-secondary btn-sm" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>
+                            Prev
+                        </button>
+                        <button
+                            className="btn btn-secondary btn-sm"
+                            disabled={(page * pageSize) >= modelsPage.total}
+                            onClick={() => setPage(p => p + 1)}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {showFilters && <FilterPanel setShowFilters={setShowFilters} />}
 
@@ -325,7 +442,7 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                     <DialogTitle sx={{ px: 3, py: 2 }}>
                         <Box display="flex" justifyContent="space-between" alignItems="center">
                             <Typography variant="h6" fontWeight={600}>
-                                Request Model
+                                {mode === "edit" ? "Edit Model" : "Request Model"}
                             </Typography>
                             <IconButton onClick={() => setShowAddModal(false)}>
                                 {/* <CloseIcon /> */}
@@ -374,14 +491,12 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
                             {/* Provider */}
                             <Box>
-
-
                                 <TextField
                                     select
                                     fullWidth
                                     displayEmpty
-                                    value={newModel.cost}
-                                    onChange={(e) => setNewModel({ ...newModel, cost: e.target.value })}
+                                    value={newModel.providerId}
+                                    onChange={(e) => setNewModel({ ...newModel, providerId: e.target.value })}
                                     sx={{
                                         ...inputSx,
                                         "& .MuiSelect-select": {
@@ -393,22 +508,22 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
                                     slotProps={{
                                         select: {
-                                            native: false, // Set to false for custom rendering
+                                            native: false,
                                             displayEmpty: true,
                                             renderValue: (selected) => {
                                                 if (!selected || selected === "") {
-                                                    return <span style={{ color: '#999' }}>Select Model Providers</span>;
+                                                    return <span style={{ color: '#999' }}>Select Model Provider</span>;
                                                 }
                                                 const provider = providers.find(p => p.id === selected);
                                                 return provider ? provider.name : selected;
                                             },
-                                        },
+                                        }
                                     }}
                                 >
 
-                                    <MenuItem value="">Select Providers</MenuItem>
+                                    <MenuItem value="">Select Provider</MenuItem>
                                     {providers.map(ind => (
-                                        <MenuItem value={ind.id}>{ind.name}</MenuItem>
+                                        <MenuItem key={ind.id} value={ind.id}>{ind.name}</MenuItem>
                                     ))}
 
                                 </TextField>
@@ -441,7 +556,6 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                                             ...newModel,
                                             type: e.target.value,
                                             url: "",
-                                            apikey: "",
                                         })
                                     }
                                     sx={{
@@ -472,7 +586,7 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
 
                                     <MenuItem value="">Select Model Type</MenuItem>
                                     {modelType.map(ind => (
-                                        <MenuItem value={ind.id}>{ind.name}</MenuItem>
+                                        <MenuItem key={ind.id} value={ind.id}>{ind.name}</MenuItem>
                                     ))}
 
                                 </TextField>
@@ -484,22 +598,10 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                                     <Box>
                                         <TextField
                                             fullWidth
-                                            placeholder="Enter API URL"
+                                            placeholder="Endpoint override (optional) e.g., https://api.deepseek.com"
                                             value={newModel.url}
                                             onChange={(e) =>
                                                 setNewModel({ ...newModel, url: e.target.value })
-                                            }
-                                            sx={inputSx}
-                                        />
-                                    </Box>
-
-                                    <Box>
-                                        <TextField
-                                            fullWidth
-                                            placeholder="Enter API Key"
-                                            value={newModel.apikey}
-                                            onChange={(e) =>
-                                                setNewModel({ ...newModel, apikey: e.target.value })
                                             }
                                             sx={inputSx}
                                         />
@@ -583,7 +685,7 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                             </Typography>
 
                             <Button
-                                onClick={handleAddModel}
+                                onClick={() => (mode === "edit" ? updateModel.mutate() : createModel.mutate())}
                                 variant="contained"
                                 sx={{
                                     backgroundColor: "#e0e0e0",
@@ -601,7 +703,9 @@ const ModelCatalog = ({ showFilters, setShowFilters }) => {
                                     },
                                 }}
                             >
-                                Submit Request
+                                {mode === "edit"
+                                    ? (updateModel.isPending ? "Saving..." : "Save")
+                                    : (createModel.isPending ? "Submitting..." : "Submit Request")}
                             </Button>
                         </Box>
                     </DialogActions>

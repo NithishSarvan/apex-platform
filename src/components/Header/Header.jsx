@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Divider, Grid, Menu, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Alert, Box, Divider, Grid, Menu, Typography } from "@mui/material";
 
 import { FiMenu } from "react-icons/fi";
 import { IoFolderOutline } from "react-icons/io5";
@@ -14,11 +14,40 @@ import { RiFileList3Line } from "react-icons/ri";
 import { TbGridDots } from "react-icons/tb";
 import { useNavigate } from 'react-router-dom';
 import AppLogo from '../../assets/apex-logo.svg'
+import { getMe, logout } from "../../api/auth";
 
 const Header = ({ onToggleSidebar }) => {
     const [workspaceAnchor, setWorkspaceAnchor] = useState(null);
     const [profileAnchor, setProfileAnchor] = useState(null);
+    const [me, setMe] = useState(null);
+    const [meError, setMeError] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let mounted = true;
+        // Load once; keep it simple for the prototype
+        getMe()
+            .then((data) => {
+                if (!mounted) return;
+                setMe(data);
+                setMeError(null);
+            })
+            .catch((e) => {
+                if (!mounted) return;
+                setMe(null);
+                setMeError(e?.message || "Failed to load user");
+            });
+        return () => { mounted = false; };
+    }, []);
+
+    const doLogout = async () => {
+        setProfileAnchor(null);
+        try {
+            await logout();
+        } finally {
+            navigate("/login", { replace: true });
+        }
+    };
     return (
         <header className="header">
             {/* LEFT */}
@@ -130,7 +159,9 @@ const Header = ({ onToggleSidebar }) => {
                     className="user-menu"
                     onClick={(e) => setProfileAnchor(e.currentTarget)}
                 >
-                    <Typography variant="p" sx={{ fontWeight: 600, pointerEvents: "none" }} >User</Typography>
+                    <Typography variant="p" sx={{ fontWeight: 600, pointerEvents: "none" }} >
+                        {me?.email ? me.email.split("@")[0] : "User"}
+                    </Typography>
 
                     <span style={{ color: "#00c853", fontSize: "12px", pointerEvents: "none" }}>▼</span>
 
@@ -152,10 +183,21 @@ const Header = ({ onToggleSidebar }) => {
                     }}
                 >
                     <Box sx={{ p: 2 }} >
-                        <Typography variant="body1" sx={{ fontWeight: 600, mb: 2 }} >user@apex.ai</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 700, mb: 0.5 }}>
+                            {me?.email || "user@apex.ai"}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: "#6a7074", mb: 1.5 }}>
+                            {me?.role ? `Role: ${me.role}` : "Role: -"}
+                        </Typography>
+                        {meError && (
+                            <Alert severity="warning" sx={{ mb: 1.5 }}>
+                                {meError}
+                            </Alert>
+                        )}
                         <div
                             className="profile-item"
                             onClick={() => {
+                                setProfileAnchor(null);
                                 navigate("/settings")
 
                             }}
@@ -166,7 +208,7 @@ const Header = ({ onToggleSidebar }) => {
 
                         <Divider />
 
-                        <div className="profile-item ">
+                        <div className="profile-item " onClick={doLogout}>
                             <MdOutlineLogout size={18} />
                             Logout
                         </div>

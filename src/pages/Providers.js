@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
     Table,
     TableBody,
@@ -21,6 +21,9 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { apiGet, apiPost, apiPut, apiDelete } from '../api/client';
 
 // Import your assets
 import gpt from "../assets/gpt-JRKBi7sz.svg";
@@ -35,42 +38,79 @@ import qwen from "../assets/qwen.svg";
 import cohere from "../assets/cohere.svg";
 import xai from "../assets/xai.svg";
 
-const initialProviders = [
-    { id: 1, name: "OpenAI", description: "OpenAI", modelCount: 26, logo: gpt },
-    { id: 2, name: "Meta", description: "Meta", modelCount: 3, logo: meta },
-    { id: 3, name: "MBZUAI", description: "MBZUAI", modelCount: 2, logo: mbzuai },
-    { id: 4, name: "Inception", description: "Inception", modelCount: 1, logo: inception },
-    { id: 5, name: "Mistral AI", description: "mistral", modelCount: 3, logo: mistral },
-    { id: 6, name: "Stability AI", description: "Stability AI", modelCount: 1, logo: stablediffusion },
-    { id: 7, name: "Anthropic", description: "Anthropic", modelCount: 1, logo: anthropicCalude },
-    { id: 8, name: "DeepSeek", description: "DeepSeek", modelCount: 1, logo: deepseek },
-    { id: 9, name: "Qwen", description: "Qwen", modelCount: 3, logo: qwen },
-    { id: 10, name: "Cohere", description: "Cohere", modelCount: 4, logo: cohere },
-    { id: 11, name: "xAI", description: "xAI", modelCount: 1, logo: xai },
-];
-
 const Providers = () => {
-    const [providers, setProviders] = useState(initialProviders);
+    const queryClient = useQueryClient();
+    const { data: providers = [], isLoading, error } = useQuery({
+        queryKey: ["providers"],
+        queryFn: async () => apiGet("/api/providers"),
+    });
     const [open, setOpen] = useState(false);
+    const [mode, setMode] = useState("create"); // create | edit
+    const [editingProviderId, setEditingProviderId] = useState(null);
+    const [actionsAnchor, setActionsAnchor] = useState(null);
+    const [actionsProvider, setActionsProvider] = useState(null);
+
     const [newProvider, setNewProvider] = useState({
         name: '',
         description: '',
         modelCount: '',
-        logo: null
+        logo: null,
+        apiKey: "",
+        type: "DEEPSEEK",
+        baseUrl: "https://api.deepseek.com",
     });
 
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        setMode("create");
+        setEditingProviderId(null);
+        setOpen(true);
+    };
     const handleClose = () => {
         setOpen(false);
-        setNewProvider({ name: '', description: '', modelCount: 0, logo: null });
+        setNewProvider({
+            name: '',
+            description: '',
+            modelCount: 0,
+            logo: null,
+            apiKey: "",
+            type: "DEEPSEEK",
+            baseUrl: "https://api.deepseek.com",
+        });
+        setMode("create");
+        setEditingProviderId(null);
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewProvider(prev => ({
-            ...prev,
-            [name]: name === 'modelCount' ? parseInt(value) || 0 : value
-        }));
+        setNewProvider(prev => {
+            const next = {
+                ...prev,
+                [name]: name === 'modelCount' ? parseInt(value) || 0 : value
+            };
+
+            // Helpful defaults when user switches provider type
+            if (name === "type") {
+                const defaults = {
+                    DEEPSEEK: "https://api.deepseek.com",
+                    OPENAI: "https://api.openai.com",
+                    GROQ: "https://api.groq.com",
+                    OPENAI_COMPAT: "",
+                    GEMINI: "https://generativelanguage.googleapis.com",
+                    MOCK: "",
+                };
+                const current = (prev.baseUrl || "").trim();
+                const wasDefaultish =
+                    current === "" ||
+                    current.includes("deepseek.com") ||
+                    current.includes("openai.com") ||
+                    current.includes("groq.com") ||
+                    current.includes("generativelanguage.googleapis.com");
+                if (wasDefaultish) {
+                    next.baseUrl = defaults[value] ?? next.baseUrl;
+                }
+            }
+            return next;
+        });
     };
 
     const handleFileChange = (e) => {
@@ -87,34 +127,117 @@ const Providers = () => {
         }
     };
 
-    const handleSubmit = () => {
-        if (newProvider.name && newProvider.description) {
-            const newProviderWithId = {
-                ...newProvider,
-                id: providers.length + 1
-            };
-            setProviders(prev => [...prev, newProviderWithId]);
+    const createProvider = useMutation({
+        mutationFn: async () => {
+            return apiPost("/api/providers", {
+                name: newProvider.name,
+                description: newProvider.description,
+                modelCount: Number(newProvider.modelCount) || 0,
+                logoUrl: newProvider.logo,
+                apiKey: newProvider.apiKey,
+                type: newProvider.type || null,
+                baseUrl: newProvider.baseUrl || null,
+                status: "ACTIVE",
+            });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["providers"] });
             handleClose();
+        },
+    });
+
+    const updateProvider = useMutation({
+        mutationFn: async () => {
+            if (!editingProviderId) throw new Error("Missing provider id");
+            return apiPut(`/api/providers/${editingProviderId}`, {
+                name: newProvider.name || null,
+                description: newProvider.description ?? null,
+                modelCount: Number(newProvider.modelCount) || 0,
+                logoUrl: newProvider.logo,
+                apiKey: newProvider.apiKey, // if present, updates provider secret
+                type: newProvider.type || null,
+                baseUrl: newProvider.baseUrl || null,
+                status: "ACTIVE",
+            });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["providers"] });
+            handleClose();
+        },
+    });
+
+    const testProvider = useMutation({
+        mutationFn: async (providerId) => apiPost(`/api/providers/${providerId}/test`, {}),
+    });
+
+    const deleteProvider = useMutation({
+        mutationFn: async (providerId) => apiDelete(`/api/providers/${providerId}`),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["providers"] });
         }
+    });
+
+    const handleSubmit = () => {
+        if (mode === "edit") updateProvider.mutate();
+        else createProvider.mutate();
+    };
+
+    const openActions = Boolean(actionsAnchor);
+    const handleActionsOpen = (event, provider) => {
+        setActionsAnchor(event.currentTarget);
+        setActionsProvider(provider);
+    };
+    const handleActionsClose = () => {
+        setActionsAnchor(null);
+        setActionsProvider(null);
+    };
+
+    const startEdit = (provider) => {
+        handleActionsClose();
+        setMode("edit");
+        setEditingProviderId(provider.id);
+        setNewProvider({
+            name: provider.name || '',
+            description: provider.description || '',
+            modelCount: provider.modelCount || 0,
+            logo: provider.logoUrl || null,
+            apiKey: "", // do not prefill secret
+            type: provider.type || "DEEPSEEK",
+            baseUrl: provider.baseUrl || "https://api.deepseek.com",
+        });
+        setOpen(true);
     };
 
     const renderProviderRow = (provider) => (
 
         <Box sx={{ p: 3 }}>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 1.5 }}>
-                <img src={provider.logo} width={60} height={60} alt={provider.name} />
-                <h5 className='font-semibold text-xl'>{provider.name}</h5>
+            <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 1.5, justifyContent: "space-between" }}>
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                    <img src={provider.logoUrl || provider.logo} width={60} height={60} alt={provider.name} />
+                    <h5 className='font-semibold text-xl'>{provider.name}</h5>
+                </Box>
+
+                <IconButton size="small" onClick={(e) => handleActionsOpen(e, provider)}>
+                    <MoreVertIcon fontSize="small" />
+                </IconButton>
             </Box>
-            <p className='text-sm'>{provider.description} | {provider.modelCount} Model{provider.modelCount !== 1 ? 's' : ''}</p>
+            <p className='text-sm'>
+                {provider.description} | {provider.modelCount} Model{provider.modelCount !== 1 ? 's' : ''}
+                {provider.type ? ` | ${provider.type}` : ''}
+                {provider.baseUrl ? ` | ${provider.baseUrl}` : ''}
+                {provider.hasSecret ? ' | key: saved' : ' | key: missing'}
+            </p>
         </Box>
 
     );
 
-    // Group providers into pairs for table layout
-    const groupedProviders = [];
-    for (let i = 0; i < providers.length; i += 2) {
-        groupedProviders.push(providers.slice(i, i + 2));
-    }
+    const groupedProviders = useMemo(() => {
+        const grouped = [];
+        for (let i = 0; i < providers.length; i += 2) {
+            grouped.push(providers.slice(i, i + 2));
+        }
+        return grouped;
+    }, [providers]);
 
     const grayInputSx = {
         backgroundColor: "#f4f5f6",
@@ -202,6 +325,8 @@ const Providers = () => {
                 </p>
             </div>
 
+            {isLoading && <p className="text-gray-600">Loading providers...</p>}
+            {error && <p className="text-red-600">Failed to load providers: {error.message}</p>}
 
             <TableContainer sx={{ maxWidth: "100%", margin: 'auto', mt: 4 }}>
                 <Table sx={{
@@ -226,6 +351,46 @@ const Providers = () => {
                 </Table>
             </TableContainer>
 
+            {/* Actions menu per provider */}
+            <Menu
+                anchorEl={actionsAnchor}
+                open={openActions}
+                onClose={handleActionsClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <MenuItem onClick={() => actionsProvider && startEdit(actionsProvider)}>Edit</MenuItem>
+                <MenuItem
+                    onClick={async () => {
+                        if (!actionsProvider) return;
+                        handleActionsClose();
+                        try {
+                            const res = await testProvider.mutateAsync(actionsProvider.id);
+                            alert(res?.message || "Provider test completed");
+                        } catch (e) {
+                            alert(e?.message || "Provider test failed");
+                        }
+                    }}
+                >
+                    Test connection
+                </MenuItem>
+                <MenuItem
+                    onClick={async () => {
+                        if (!actionsProvider) return;
+                        handleActionsClose();
+                        const ok = window.confirm(`Delete provider "${actionsProvider.name}"?`);
+                        if (!ok) return;
+                        try {
+                            await deleteProvider.mutateAsync(actionsProvider.id);
+                        } catch (e) {
+                            alert(e?.message || "Delete failed");
+                        }
+                    }}
+                    sx={{ color: "#c62828" }}
+                >
+                    Delete
+                </MenuItem>
+            </Menu>
 
             <Dialog
                 open={open}
@@ -243,7 +408,7 @@ const Providers = () => {
                 <DialogTitle sx={{ px: 3, py: 2 }}>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Typography variant="h6" fontWeight={600}>
-                            Add New Provider
+                            {mode === "edit" ? "Edit Provider" : "Add New Provider"}
                         </Typography>
                         <IconButton onClick={handleClose} sx={{ p: 0 }}>
                             <CloseIcon />
@@ -284,6 +449,37 @@ const Providers = () => {
                             />
                         </Box>
 
+                        {/* Provider Type */}
+                        <Box>
+                            <TextField
+                                select
+                                fullWidth
+                                value={newProvider.type}
+                                name="type"
+                                onChange={handleInputChange}
+                                sx={inputSx}
+                            >
+                                <MenuItem value="DEEPSEEK">DeepSeek (OpenAI-compatible)</MenuItem>
+                                <MenuItem value="OPENAI">OpenAI</MenuItem>
+                                <MenuItem value="GEMINI">Gemini (Google)</MenuItem>
+                                <MenuItem value="GROQ">Groq (OpenAI-compatible)</MenuItem>
+                                <MenuItem value="OPENAI_COMPAT">OpenAI Compatible (generic)</MenuItem>
+                                <MenuItem value="MOCK">Mock (local)</MenuItem>
+                            </TextField>
+                        </Box>
+
+                        {/* Base URL */}
+                        <Box>
+                            <TextField
+                                fullWidth
+                                placeholder="Base URL e.g., https://api.deepseek.com"
+                                value={newProvider.baseUrl}
+                                name="baseUrl"
+                                onChange={handleInputChange}
+                                sx={inputSx}
+                            />
+                        </Box>
+
                         {/* Description */}
                         <Box>
 
@@ -300,6 +496,18 @@ const Providers = () => {
                             />
                         </Box>
 
+                        {/* API Key (stored encrypted; never returned) */}
+                        <Box>
+                            <TextField
+                                fullWidth
+                                placeholder={mode === "edit" ? "New API Key (optional, updates secret)" : "Provider API Key (stored encrypted)"}
+                                value={newProvider.apiKey}
+                                name="apiKey"
+                                onChange={handleInputChange}
+                                sx={inputSx}
+                                type="password"
+                            />
+                        </Box>
 
                         {/* Logo Upload */}
                         <Box>
@@ -380,7 +588,7 @@ const Providers = () => {
                         <Button
                             onClick={handleSubmit}
                             variant="contained"
-                            disabled={!newProvider.name || !newProvider.description}
+                            disabled={!newProvider.name || !newProvider.description || createProvider.isPending || updateProvider.isPending}
                             sx={{
                                 backgroundColor: !newProvider.name || !newProvider.description ? "#e0e0e0" : "#41dabbff",
                                 textTransform: "none",
@@ -401,7 +609,9 @@ const Providers = () => {
                                 },
                             }}
                         >
-                            Add Provider
+                            {mode === "edit"
+                                ? (updateProvider.isPending ? "Saving..." : "Save")
+                                : (createProvider.isPending ? "Adding..." : "Add Provider")}
                         </Button>
                     </Box>
                 </DialogActions>

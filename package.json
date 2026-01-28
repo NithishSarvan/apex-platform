@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://nithishsarvan.github.io/apex-platform",
+  "proxy": "http://localhost:8081",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
     "@mui/styled-engine-sc": "^7.3.6",
+    "@tanstack/react-query": "^5.90.19",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
@@ -19,6 +21,8 @@
     "react-router-dom": "^7.10.1",
     "react-scripts": "5.0.1",
     "react-slick": "^0.31.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.19",
     "web-vitals": "^2.1.4"

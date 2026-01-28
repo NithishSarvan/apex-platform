@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Sidebar from './components/Sidebar/Sidebar';
 import Overview from './components/Overview/Overview';
@@ -24,19 +24,70 @@ import ClientManagement from './components/Onboardings/ClientManagement';
 import LicenseManagement from './components/Onboardings/LicenseManagement';
 import UtilizationReport from './components/Onboardings/UtilizationReport';
 import BillingSummary from './components/Onboardings/BillingSummary';
+import Login from './pages/Login';
+import RequireAuth from './components/Auth/RequireAuth';
 
 
+
+function AppFrame() {
+  const location = useLocation();
+  const isLoginRoute = location.pathname === "/login";
+
+  const [activeView, setActiveView] = useState('overview');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  return (
+    <div className="app">
+      {!isLoginRoute && (
+        <Header onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
+      )}
+
+      <div className="main-container">
+        {!isLoginRoute && (
+          <Sidebar
+            activeView={activeView}
+            setActiveView={setActiveView}
+            collapsed={sidebarCollapsed}
+          />
+        )}
+
+        <div style={{ flex: 1, width: "100%" }}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+
+            <Route path="/" element={<RequireAuth><Overview /></RequireAuth>} />
+            <Route path="/models" element={<RequireAuth><ModelCatalog /></RequireAuth>} />
+            <Route path="/settings" element={<RequireAuth><SettingsTabs /></RequireAuth>} />
+            <Route path="/chat" element={<RequireAuth><Chate /></RequireAuth>} />
+            <Route path='/realtime' element={<RequireAuth><Realtime /></RequireAuth>} />
+            <Route path="/providers" element={<RequireAuth><Providers /></RequireAuth>} />
+            <Route path="/data-training" element={<RequireAuth><ModelTrainingTab /></RequireAuth>} />
+            <Route path="/workflows" element={<RequireAuth><WorkflowBuilder /></RequireAuth>} />
+            <Route path="/data-sources" element={<RequireAuth><DataSources /></RequireAuth>} />
+            <Route path="/rules-setup" element={<RequireAuth><RulesSetupStep /></RequireAuth>} />
+            <Route path="/model-details" element={<RequireAuth><ModelDetails /></RequireAuth>} />
+            <Route path="/model-details/:id" element={<RequireAuth><ModelDetails /></RequireAuth>} />
+
+            <Route path="/model-training" element={<RequireAuth><ModelTrainingList /></RequireAuth>} />
+            <Route path="/api-playground" element={<RequireAuth><ApiPlaygroundPage /></RequireAuth>} />
+            <Route path="/predefined-workflow" element={<RequireAuth><PredefinedWorkflows /></RequireAuth>} />
+
+            <Route path="/onboarding" element={<RequireAuth><Onboarding /></RequireAuth>} />
+            <Route path="/client-mang" element={<RequireAuth><ClientManagement /></RequireAuth>} />
+            <Route path="/license-management" element={<RequireAuth><LicenseManagement /></RequireAuth>} />
+            <Route path="/utilization-report" element={<RequireAuth><UtilizationReport /></RequireAuth>} />
+            <Route path="/billing-management" element={<RequireAuth><BillingSummary /></RequireAuth>} />
+            {/* <Route path="/aios" element={<AIOSEnterpriseDashboard />} /> */}
+            {/* <Route path="/clients" element={<Clients />} /> */}
+          </Routes>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
 
-
-
-  const [activeView, setActiveView] = useState('overview');
-  const [showFilters, setShowFilters] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
 
   const basename =
@@ -44,80 +95,13 @@ function App() {
       ? '/apex-platform'
       : '/';
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
 
 
     <BrowserRouter basename={basename}>
-      <div className="app">
-        <Header onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
-
-
-        <div className="main-container">
-          <Sidebar
-            activeView={activeView}
-            setActiveView={setActiveView}
-            collapsed={sidebarCollapsed}
-          />
-
-          <Routes>
-            <Route path="/" element={<Overview />} />
-            <Route path="/models" element={<ModelCatalog />} />
-            <Route path="/settings" element={<SettingsTabs />} />
-            <Route path="/chat" element={<Chate />} />
-            <Route path='/realtime' element={<Realtime />} />
-            <Route path="/providers" element={<Providers />} />
-            <Route path="/data-training" element={<ModelTrainingTab />} />
-            <Route path="/workflows" element={<WorkflowBuilder />} />
-            <Route path="/data-sources" element={<DataSources />} />
-            <Route path="/rules-setup" element={<RulesSetupStep />} />
-            <Route path="/model-details" element={<ModelDetails />} />
-
-            <Route path="/model-training" element={<ModelTrainingList />} />
-            <Route path="/api-playground" element={<ApiPlaygroundPage />} />
-            <Route path="/predefined-workflow" element={<PredefinedWorkflows />} />
-
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/client-mang" element={<ClientManagement />} />
-            <Route path="/license-management" element={<LicenseManagement />} />
-            <Route path="/utilization-report" element={<UtilizationReport />} />
-            <Route path="/billing-management" element={<BillingSummary />} />
-            {/* <Route path="/aios" element={<AIOSEnterpriseDashboard />} /> */}
-            {/* <Route path="/clients" element={<Clients />} /> */}
-          </Routes>
-
-        </div>
-
-      </div>
+      <AppFrame />
     </BrowserRouter >
   );
 }
 
 export default App;
-
-
-// <div className="app">
-//   <Header onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
-
-//   <div className="main-container">
-//     <Sidebar
-//       activeView={activeView}
-//       setActiveView={setActiveView}
-//       collapsed={sidebarCollapsed}
-//     />
-
-//     {activeView === 'catalog' ? (
-
-//       <ModelCatalog
-//         showFilters={showFilters}
-//         setShowFilters={setShowFilters}
-//       />
-//     ) : (
-//       <Overview />
-//     )}
-//     {/* <ModelDetails /> */}
-//   </div>
-// </div>

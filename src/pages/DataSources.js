@@ -14,36 +14,16 @@ import {
     Grid,
     Divider
 } from "@mui/material";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { apiDelete, apiGet, apiPost } from '../api/client';
 
 const DataSourcesStep = ({ data, onUpdate }) => {
 
-
-    const [sources, setSources] = useState([
-        {
-            id: 1,
-            name: 'Customer Database',
-            type: 'database',
-            status: 'connected',
-            connectionString: 'postgresql://user:pass@localhost:5432/customers',
-            lastSynced: '5 minutes ago'
-        },
-        {
-            id: 2,
-            name: 'Product API',
-            type: 'api',
-            status: 'connected',
-            endpoint: 'https://api.products.com/v1',
-            lastSynced: '1 hour ago'
-        },
-        {
-            id: 3,
-            name: 'CRM Webhook',
-            type: 'webhook',
-            status: 'disconnected',
-            endpoint: 'https://crm.example.com/webhook',
-            lastSynced: '2 days ago'
-        }
-    ]);
+    const queryClient = useQueryClient();
+    const { data: sources = [], isLoading, error } = useQuery({
+        queryKey: ["dataSources"],
+        queryFn: async () => apiGet("/api/data-sources"),
+    });
 
     const [showAddModal, setShowAddModal] = useState(false);
     const [newSource, setNewSource] = useState({
@@ -66,54 +46,55 @@ const DataSourcesStep = ({ data, onUpdate }) => {
         { id: 'queue', name: 'Message Queue', icon: <FiLink />, color: 'text-red-600' },
     ];
 
+    const createSource = useMutation({
+        mutationFn: async () => {
+            const typeUpper = (newSource.type || "").trim().toUpperCase();
+            return apiPost("/api/data-sources", {
+                name: newSource.name,
+                type: typeUpper,
+                connectionString: typeUpper === "DATABASE" ? newSource.connectionString : null,
+                endpointUrl: typeUpper === "DATABASE" ? null : newSource.connectionString,
+            });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["dataSources"] });
+            setShowAddModal(false);
+            setNewSource({
+                name: '',
+                type: '',
+                connectionString: '',
+                endpoint: '',
+                authentication: '',
+                apiKey: '',
+                username: '',
+                password: '',
+                frequency: ""
+            });
+        }
+    });
+
+    const deleteSource = useMutation({
+        mutationFn: async (id) => apiDelete(`/api/data-sources/${id}`),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["dataSources"] });
+        }
+    });
+
+    const testSource = useMutation({
+        mutationFn: async (id) => apiPost(`/api/data-sources/${id}/test`, {}),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["dataSources"] });
+        }
+    });
+
     const handleAddSource = () => {
         if (!newSource.name.trim()) return;
-
-        const source = {
-            id: Date.now(),
-            name: newSource.name,
-            type: newSource.type,
-            status: 'disconnected',
-            connectionString: newSource.connectionString,
-            endpoint: newSource.endpoint,
-            lastSynced: 'Never'
-        };
-
-        const updatedSources = [...sources, source];
-        setSources(updatedSources);
-        onUpdate(updatedSources);
-        setShowAddModal(false);
-        setNewSource({
-            name: '',
-            type: '',
-            connectionString: '',
-            endpoint: '',
-            authentication: '',
-            apiKey: '',
-            username: '',
-            password: ''
-        });
-    };
-
-    const handleDeleteSource = (id) => {
-        const updatedSources = sources.filter(source => source.id !== id);
-        setSources(updatedSources);
-        onUpdate(updatedSources);
-    };
-
-    const handleTestConnection = (id) => {
-        const updatedSources = sources.map(source => {
-            if (source.id === id) {
-                return { ...source, status: 'connected', lastSynced: 'Just now' };
-            }
-            return source;
-        });
-        setSources(updatedSources);
-        onUpdate(updatedSources);
+        createSource.mutate();
     };
 
     const getStatusColor = (status) => {
-        switch (status) {
+        const s = (status || "").toLowerCase();
+        switch (s) {
             case 'connected': return 'bg-green-100 text-green-800';
             case 'disconnected': return 'bg-red-100 text-red-800';
             case 'syncing': return 'bg-yellow-100 text-yellow-800';
@@ -121,39 +102,8 @@ const DataSourcesStep = ({ data, onUpdate }) => {
         }
     };
 
-    const handleAddModel = () => {
-        if (!newSource.name.trim()) return;
-
-        const source = {
-            id: Date.now(),
-            name: newSource.name,
-            type: newSource.type,
-            status: 'disconnected',
-            connectionString: newSource.connectionString,
-            endpoint: newSource.endpoint,
-            lastSynced: 'Never'
-        };
-
-        const updatedSources = [...sources, source];
-        setSources(updatedSources);
-        onUpdate(updatedSources);
-        setShowAddModal(false);
-        setNewSource({
-            name: '',
-            type: '',
-            connectionString: '',
-            endpoint: '',
-            authentication: 'none',
-            apiKey: '',
-            username: '',
-            password: ''
-        });
-
-        // setModels([...models, newModelObj]);
-        // setSelectedModel(newModelObj.id);
-        setShowAddModal(false);
-        // setNewSource({ name: '', provider: '', type: 'API', endpoint: '', apiKey: '' });
-    };
+    // legacy handler name used by the dialog "Connect Source" button
+    const handleAddModel = handleAddSource;
 
     const inputSx = {
         "& .MuiOutlinedInput-root": {
@@ -204,6 +154,8 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                     </div>
 
                     <div className="space-y-4">
+                        {isLoading && <p className="text-gray-600">Loading data sources...</p>}
+                        {error && <p className="text-red-600">Failed to load data sources: {error.message}</p>}
                         {sources.map((source) => (
                             <div key={source.id} className="p-4 border border-gray-200 rounded-lg">
                                 <div className="flex items-center justify-between mb-3">
@@ -219,38 +171,38 @@ const DataSourcesStep = ({ data, onUpdate }) => {
                                         </div> */}
                                         <div>
                                             <h5 className="font-semibold">{source.name}</h5>
-                                            <p className="text-sm text-gray-500">{source.type.toUpperCase()}</p>
+                                            <p className="text-sm text-gray-500">{source.type}</p>
                                         </div>
                                     </div>
                                     <span className={`status-badge ${getStatusColor(source.status)}`}>
-                                        {source.status}
+                                        {(source.status || "").toLowerCase()}
                                     </span>
                                 </div>
 
                                 <div className="text-sm text-gray-600 mb-4">
-                                    {source.type === 'database' ? (
+                                    {(source.type || "").toLowerCase() === 'database' ? (
                                         <div className="py-2 text-sm text-[#676a6e] truncate"><p>{source.connectionString} </p></div>
                                     ) : (
-                                        <div className="py-2 text-sm text-[#676a6e] truncate"><p>{source.endpoint} </p></div>
+                                        <div className="py-2 text-sm text-[#676a6e] truncate"><p>{source.endpointUrl} </p></div>
                                     )}
                                 </div>
 
                                 <div className="flex justify-between items-center">
                                     <div className="text-xs text-gray-500">
                                         <p>
-                                            Last synced: {source.lastSynced}
+                                            Last synced: —
 
                                         </p>
                                     </div>
                                     <div className="flex gap-2">
                                         <button
-                                            onClick={() => handleTestConnection(source.id)}
+                                            onClick={() => testSource.mutate(source.id)}
                                             className="btn btn-secondary btn-sm"
                                         >
                                             <FiRefreshCw /> Test
                                         </button>
                                         <button
-                                            onClick={() => handleDeleteSource(source.id)}
+                                            onClick={() => deleteSource.mutate(source.id)}
                                             className="btn btn-secondary btn-sm"
                                         >
                                             <FiTrash2 />

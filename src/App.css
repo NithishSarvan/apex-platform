@@ -428,8 +428,8 @@
   overflow-y: auto; */
 
   /* overflow-y: auto; */
-  width: 80%;
-  max-width: 80%;
+  width: 100%;
+  max-width: 100%;
   position: relative;
 }
 
